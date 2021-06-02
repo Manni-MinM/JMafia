@@ -1,6 +1,6 @@
 // BWOTSHEWCHB
 
-package jmafia.server ;
+package jmafia.util ;
 
 import java.util.ArrayList ;
 
@@ -53,6 +53,14 @@ public class Command {
 			for ( String parameter : splitDash )
 				parameters.add(parameter) ;
 		}
+	}
+	public void printDebug() {
+		System.out.println("username : " + username) ;
+		System.out.println("function : " + function) ;
+		System.out.print("parameters : ") ;
+		for ( String parameter : parameters )
+			System.out.print(parameter + " ") ;
+		System.out.println() ;
 	}
 	@Override
 	public String toString() {

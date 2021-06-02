@@ -2,13 +2,12 @@
 
 package jmafia.server ;
 
-import java.io.* ;
-import java.net.* ;
 import java.util.* ;
+
+import jmafia.util.* ;
 
 public class God {
 	// Fields
-	private Parser parser ;
 	private static God god ;
 	// Constructor
 	public God() {
@@ -21,6 +20,7 @@ public class God {
 		return god ;
 	}
 	public String respond(String msg) {
+		// $user@function:count:param1-param2-param3-...-paramCount
 		Command command = new Command() ;
 		command.parse(msg) ;
 		if ( command.getFunction().equals("register") )
@@ -29,7 +29,6 @@ public class God {
 		return null ;
 	}
 	public String returnMessage(String msg) {
-		// $user@function:count:param1-param2-param3-...-paramCount
 		Command serverCommand = new Command() ;
 		serverCommand.setUsername("The Holy One") ;
 		serverCommand.setFunction("showMessage") ;
@@ -45,16 +44,6 @@ public class God {
 		for ( String parameter : parameters )
 			serverCommand.addParameter(parameter) ;
 		return serverCommand.toString() ;
-	}
-	public void printDebug(String msg) {
-		Command command = new Command() ;
-		command.parse(msg) ;
-		System.out.println("username : " + command.getUsername()) ;
-		System.out.println("function : " + command.getFunction()) ;
-		System.out.print("parameters : ") ;
-		for ( String parameter : command.getParameters() )
-			System.out.print(parameter + " ") ;
-		System.out.println() ;
 	}
 	// Commands
 	public String registerCommand(Command command) {

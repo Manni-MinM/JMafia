@@ -8,6 +8,7 @@ import java.util.* ;
 
 public class ReadThread implements Runnable {
 	// Fields
+	private Jesus jesus ;
 	private BufferedReader reader ;
 	// Constructor
 	public ReadThread(InputStream in) {
@@ -19,7 +20,12 @@ public class ReadThread implements Runnable {
 		try {
 			while ( true ) {
 				String msg = reader.readLine() ;
-				System.out.println(msg) ;
+				if ( isCommandMsg(msg) ) {
+					// TODO
+					// jesus.respond(msg) ;
+				} else {
+					System.out.println(msg) ;
+				}
 			}
 		} catch ( SocketException exception) {
 			exception.printStackTrace() ;
@@ -32,6 +38,9 @@ public class ReadThread implements Runnable {
 				exception.printStackTrace() ;
 			}
 		}
+	}
+	public boolean isCommandMsg(String msg) {
+		return (msg.charAt(0) == '$') ;
 	}
 }
 
