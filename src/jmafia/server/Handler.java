@@ -23,6 +23,8 @@ public class Handler implements Runnable {
 			String msg = "" ;
 			do {
 				msg = reader.readLine() ;
+				if ( msg == null )
+					continue ;
 				if ( isCommandMsg(msg) ) {
 					System.out.println("Command Msg : " + msg) ;
 					broadcastCommand(socket , god.respond(msg)) ;

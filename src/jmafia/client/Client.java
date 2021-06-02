@@ -5,6 +5,7 @@ package jmafia.client ;
 import java.io.* ;
 import java.net.* ;
 import java.util.* ;
+import java.util.concurrent.* ;
 
 public class Client {
 	// Fields
@@ -15,8 +16,12 @@ public class Client {
 			Socket socket = new Socket("127.0.0.1" , port) ;
 			System.out.println("[CONNECTED TO SERVER]") ;
 
-			Thread writeThread = new Thread(new WriteThread(socket.getOutputStream())) ;
-			Thread readThread = new Thread(new ReadThread(socket.getInputStream())) ;
+			ClientData data = new ClientData() ;
+			Jesus jesus = new Jesus(data) ;
+			SynchronousQueue<String> queue = new SynchronousQueue<String>() ;
+
+			Thread writeThread = new Thread(new WriteThread(socket.getOutputStream() , queue)) ;
+			Thread readThread = new Thread(new ReadThread(socket.getInputStream() , queue , jesus)) ;
 			writeThread.start() ;
 			readThread.start() ;
 

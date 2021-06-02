@@ -5,13 +5,17 @@ package jmafia.client ;
 import java.io.* ;
 import java.net.* ;
 import java.util.* ;
+import java.util.concurrent.* ;
 
 public class ReadThread implements Runnable {
 	// Fields
 	private Jesus jesus ;
+	private SynchronousQueue<String> queue ;
 	private BufferedReader reader ;
 	// Constructor
-	public ReadThread(InputStream in) {
+	public ReadThread(InputStream in , SynchronousQueue<String> queue , Jesus jesus) {
+		this.queue = queue ;
+		this.jesus = jesus ;
 		this.reader = new BufferedReader(new InputStreamReader(in)) ;
 	}
 	// Methods
@@ -20,9 +24,17 @@ public class ReadThread implements Runnable {
 		try {
 			while ( true ) {
 				String msg = reader.readLine() ;
+				if ( msg == null )
+					continue ;
 				if ( isCommandMsg(msg) ) {
 					// TODO
-					// jesus.respond(msg) ;
+					try {
+						String response = jesus.respond(msg) ;
+						if ( response != null )
+							queue.put(jesus.respond(msg)) ;
+					} catch ( InterruptedException exception ) {
+						exception.printStackTrace() ;
+					}
 				} else {
 					System.out.println(msg) ;
 				}

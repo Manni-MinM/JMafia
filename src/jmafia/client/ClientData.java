@@ -1,9 +1,9 @@
 // BWOTSHEWCHB
 
-package java.client ;
+package jmafia.client ;
 
 public class ClientData {
-	// Private Data
+	// Fields
 	private String username ;
 	// Constructor
 	public ClientData() {
