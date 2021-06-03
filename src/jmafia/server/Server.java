@@ -21,6 +21,7 @@ public class Server {
 
 				god.requestUsername(socket) ;
 				god.sendWelcomeMessage(socket) ;
+				god.sendRole(socket) ;
 			}
 		} catch ( IOException exception ) {
 			exception.printStackTrace() ;

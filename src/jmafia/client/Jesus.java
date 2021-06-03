@@ -21,12 +21,18 @@ public class Jesus {
 		// $user@function:count:param1-param2-param3-...-paramCount
 		Command command = new Command() ;
 		command.parse(msg) ;
-		if ( command.getFunction().equals("SHOW_MESSAGE") )
-			return showMessageCommand(command) ;
-		if ( command.getFunction().equals("REQUEST_USERNAME") )
-			return responseUsernameCommand(command) ;
+
 		// TODO : add other commands
-		return returnCommand(NULL_RESPONSE) ;
+		String function = command.getFunction() ;
+		if ( function.equals("SHOW_MESSAGE") ) {
+			return showMessageCommand(command) ;
+		} else if ( function.equals("REQUEST_USERNAME") ) {
+			return responseUsernameCommand(command) ;
+		} else if ( function.equals("GET_ROLE") ) {
+			return responseRoleCommand(command) ;
+		} else {	
+			return returnCommand(NULL_RESPONSE) ;
+		}
 	}
 	public String returnCommand(String function , String... parameters) {
 		Command serverCommand = new Command() ;
@@ -49,6 +55,11 @@ public class Jesus {
 		String username = scanner.nextLine() ;
 		data.setUsername(username) ;
 		return returnCommand("RESPONSE_USERNAME" , username) ;
+	}
+	public String responseRoleCommand(Command command) {
+		String roleName = command.getParameters().get(0) ;
+		data.setRole(roleName) ;
+		return returnCommand(NULL_RESPONSE) ;
 	}
 }
 
