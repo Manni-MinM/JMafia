@@ -8,20 +8,25 @@ import jmafia.util.* ;
 
 public class Jesus {
 	// Fields
-	private ClientData data ;
+	public ClientData data ;
+	private Scanner scanner ;
+	private String NULL_RESPONSE = "NULL_RESPONSE" ;
 	// Constructor
 	public Jesus(ClientData data) {
 		this.data = data ;
+		this.scanner = new Scanner(System.in) ;
 	}
 	// Methods
 	public String respond(String msg) {
 		// $user@function:count:param1-param2-param3-...-paramCount
 		Command command = new Command() ;
 		command.parse(msg) ;
-		if ( command.getFunction().equals("showMessage") )
+		if ( command.getFunction().equals("SHOW_MESSAGE") )
 			return showMessageCommand(command) ;
+		if ( command.getFunction().equals("REQUEST_USERNAME") )
+			return responseUsernameCommand(command) ;
 		// TODO : add other commands
-		return null ;
+		return returnCommand(NULL_RESPONSE) ;
 	}
 	public String returnCommand(String function , String... parameters) {
 		Command serverCommand = new Command() ;
@@ -33,9 +38,17 @@ public class Jesus {
 		return serverCommand.toString() ;
 	}
 	// Commands
+	// TODO : Add More Commands
 	public String showMessageCommand(Command command) {
-		System.out.println(command.getParameters().get(0)) ;
-		return null ;
+		String msg = "[" + command.getUsername() + "]: " + command.getParameters().get(0) ;
+		System.out.println(msg) ;
+		return returnCommand(NULL_RESPONSE) ;
+	}
+	public String responseUsernameCommand(Command command) {
+		System.out.print("Username : ") ;
+		String username = scanner.nextLine() ;
+		data.setUsername(username) ;
+		return returnCommand("RESPONSE_USERNAME" , username) ;
 	}
 }
 

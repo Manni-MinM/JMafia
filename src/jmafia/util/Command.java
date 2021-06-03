@@ -67,7 +67,8 @@ public class Command {
 		String parametersStringed = "" ;
 		for ( String parameter : parameters )
 			parametersStringed += parameter + "-" ;
-		parametersStringed = parametersStringed.substring(0 , parametersStringed.length() - 1) ;
+		if ( parametersStringed.length() > 0 )
+			parametersStringed = parametersStringed.substring(0 , parametersStringed.length() - 1) ;
 		return "$" + username + "@" + function + ":" + count + ":" + parametersStringed ;
 	}
 }

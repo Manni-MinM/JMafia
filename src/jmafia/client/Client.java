@@ -18,9 +18,9 @@ public class Client {
 
 			ClientData data = new ClientData() ;
 			Jesus jesus = new Jesus(data) ;
-			SynchronousQueue<String> queue = new SynchronousQueue<String>() ;
+			SynchronousQueue<String> queue = new SynchronousQueue<String>(true) ;
 
-			Thread writeThread = new Thread(new WriteThread(socket.getOutputStream() , queue)) ;
+			Thread writeThread = new Thread(new WriteThread(socket.getOutputStream() , queue , jesus)) ;
 			Thread readThread = new Thread(new ReadThread(socket.getInputStream() , queue , jesus)) ;
 			writeThread.start() ;
 			readThread.start() ;

@@ -9,16 +9,18 @@ import java.util.* ;
 public class Server {
 	// Fields
 	private static int port = 6969 ;
-	private static ServerData data = ServerData.getInstance() ;
+	private static God god = God.getInstance() ;
 	// Methods
 	public static void main(String[] args) {
 		try ( ServerSocket serverSocket = new ServerSocket(port) ) {
 			System.out.println("[SERVER STARTED] : Listening on Port " + port) ;
 			while ( true ) {
 				Socket socket = serverSocket.accept() ;
-				data.clients.add(socket) ;
 				Thread handler = new Thread(new Handler(socket)) ;
 				handler.start() ;
+
+				god.requestUsername(socket) ;
+				god.sendWelcomeMessage(socket) ;
 			}
 		} catch ( IOException exception ) {
 			exception.printStackTrace() ;

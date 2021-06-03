@@ -27,11 +27,11 @@ public class ReadThread implements Runnable {
 				if ( msg == null )
 					continue ;
 				if ( isCommandMsg(msg) ) {
-					// TODO
 					try {
+						System.out.println("RECV : " + msg) ;
 						String response = jesus.respond(msg) ;
-						if ( response != null )
-							queue.put(jesus.respond(msg)) ;
+						System.out.println("SENT : " + response) ;
+						queue.put(response) ;
 					} catch ( InterruptedException exception ) {
 						exception.printStackTrace() ;
 					}

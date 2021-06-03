@@ -9,11 +9,12 @@ import java.util.concurrent.* ;
 
 public class WriteThread implements Runnable {
 	// Fields
-	private String username ;
+	private Jesus jesus ;
 	private PrintWriter writer ;
 	private SynchronousQueue<String> queue ;
 	// Constructor
-	public WriteThread(OutputStream out , SynchronousQueue<String> queue) {
+	public WriteThread(OutputStream out , SynchronousQueue<String> queue , Jesus jesus) {
+		this.jesus = jesus ;
 		this.queue = queue ;
 		this.writer = new PrintWriter(out , true) ;
 	}
@@ -21,36 +22,31 @@ public class WriteThread implements Runnable {
 	@Override
 	public void run() {
 		Scanner scanner = new Scanner(System.in) ;
-		
-		System.out.print("Username : ") ;
-		username = scanner.nextLine() ;
-		sendCommand("register:0:") ;
 
 		String msg = "" ;
 		do {
 			String command = null ;
-			while ( queue.size() > 0 ) {
-				try {
-					command = queue.take() ;
-				} catch ( InterruptedException exception ) {
-					exception.printStackTrace() ;
-				}
+			// TODO : clean up
+			try {
+				command = queue.poll() ;
 				sendCommand(command) ;
+			} catch ( Exception exception ) {
+				exception.printStackTrace() ;
 			}
-			msg = scanner.nextLine() ;
-			sendMessage(msg) ;
+//			msg = scanner.nextLine() ;
+//			sendMessage(msg) ;
 		} while ( true ) ;
 	} 
 	public void sendCommand(String command) {
 		// $user@function:count:param1-param2-param3-...-paramCount
 		if ( command == null )
 			return ;
-		writer.println("$" + username + "@" + command) ;
+		writer.println(command) ;
 	}
 	public void sendMessage(String msg) {
 		if ( msg == null )
 			return ;
-		writer.println("[" + username + "]: " + msg) ;
+		writer.println("[" + jesus.data.getUsername() + "]: " + msg) ;
 	}
 }
 

@@ -11,9 +11,11 @@ public class ServerData {
 	private static ServerData data ;
 	// Public Fields
 	public ArrayList<Socket> clients ;
+	public HashMap<Socket , String> clientMap ;
 	// Constructor
 	private ServerData() {
 		clients = new ArrayList<Socket>() ;
+		clientMap = new HashMap<Socket , String>() ;
 	}
 	// Methods
 	public static ServerData getInstance() {
