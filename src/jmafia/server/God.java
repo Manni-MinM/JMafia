@@ -12,20 +12,16 @@ import jmafia.roles.mafia.* ;
 import jmafia.roles.civilian.* ;
 
 public class God {
-	// Config Fields
+	// Fields
 	public ServerData data ;
 	private static God god ;
 	private String serverName ;
-	// Util Fields
-	private String NULL_RESPONSE = "NULL_RESPONSE" ;
-	private HashMap<Socket , String> clients ;
+	private static boolean DEBUG = true ;
 	// Constructor
 	public God() {
 		// Config
 		this.data = ServerData.getInstance() ;
 		this.serverName = "The Holy One" ;
-		// Util
-		this.clients = new HashMap<Socket , String>() ;
 	}
 	// Private Methods
 	private void init() {
@@ -45,8 +41,9 @@ public class God {
 		data.roles.add("The Mayor") ;
 		data.roles.add("The Psychologist") ;
 		data.roles.add("The Titan") ;
-		// Shuffle it
-		Collections.shuffle(data.roles) ;
+		// Shuffle it (i know its random but it doesnt shuffle well on one try ^_^)
+		for ( int it = 0 ; it < 10 ; it ++ )
+			Collections.shuffle(data.roles) ;
 	}
 	// Public Methods
 	public static God getInstance() {
@@ -56,6 +53,25 @@ public class God {
 		}
 		return god ;
 	}
+	public void runFirstNight() {
+		data.phase = "NIGHT" ;
+		for ( String roleName : data.roleMap.keySet() ) {
+			if ( roleName.equals("The GodFather") ) {
+				data.mafias.add(data.roleMap.get(roleName)) ;
+			} else if ( roleName.equals("Doctor Lecter") ) {
+				data.mafias.add(data.roleMap.get(roleName)) ;
+			} else if ( roleName.equals("The Mafia") ) {
+				data.mafias.add(data.roleMap.get(roleName)) ;
+			} else {
+				data.civilians.add(data.roleMap.get(roleName)) ;
+			}
+		}
+		String introductionMsgMafia = "The Mafias Are => " ;
+		for ( Socket mafia : data.mafias )
+			introductionMsgMafia += data.clients.get(mafia) + " " ;
+		for ( Socket mafia : data.mafias )
+			sendMessage(mafia , introductionMsgMafia) ;
+	}
 	public void sendCommand(Socket socket , String function , String... parameters) {
 		Command serverCommand = new Command() ;
 		serverCommand.setUsername(serverName) ;
@@ -63,7 +79,8 @@ public class God {
 		serverCommand.setCount(parameters.length) ;
 		for ( String parameter : parameters )
 			serverCommand.addParameter(parameter) ;
-		System.out.println("SENT : [SOCKET : " + socket + " | USERNAME : " + clients.get(socket) + "] => " + serverCommand.toString()) ;
+		if ( DEBUG )
+			System.out.println("SENT : [SOCKET : " + socket + " | USERNAME : " + data.clients.get(socket) + "] => " + serverCommand.toString()) ;
 		try {
 			PrintWriter writer = new PrintWriter(socket.getOutputStream() , true) ;
 			writer.println(serverCommand.toString()) ;
@@ -80,9 +97,10 @@ public class God {
 		if ( clientCommand.getFunction().equals("NULL_RESPONSE") ) {
 			// Pass
 		} else if ( clientCommand.getFunction().equals("RESPONSE_USERNAME") ) {
-			clients.put(socket , username) ;
+			data.clients.put(socket , username) ;
 		}
-		System.out.println("RECV : [SOCKET : " + socket + " | USERNAME : " + username + "] => " + clientCommand.toString()) ;
+		if ( DEBUG )
+			System.out.println("RECV : [SOCKET : " + socket + " | USERNAME : " + username + "] => " + clientCommand.toString()) ;
 	}
 	// Commands
 	// TODO : Add Commands Here
@@ -91,7 +109,7 @@ public class God {
 	}
 	public void sendWelcomeMessage(Socket socket) {
 		synchronized ( socket ) {
-			String msg = "Welcome " + clients.get(socket) + " !" ;
+			String msg = "Welcome " + data.clients.get(socket) + " !" ;
 			sendMessage(socket , msg) ;
 			try {
 				socket.wait() ;
@@ -104,6 +122,7 @@ public class God {
 		synchronized ( socket ) {
 			String roleName = data.roles.get(data.roles.size() - 1) ;
 			data.roles.remove(roleName) ;
+			data.roleMap.put(roleName , socket) ;
 			sendCommand(socket , "GET_ROLE" , roleName) ;
 		}
 	}

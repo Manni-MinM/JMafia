@@ -30,7 +30,7 @@ public class Jesus {
 			return responseUsernameCommand(command) ;
 		} else if ( function.equals("GET_ROLE") ) {
 			return responseRoleCommand(command) ;
-		} else {	
+		} else {
 			return returnCommand(NULL_RESPONSE) ;
 		}
 	}
@@ -59,7 +59,7 @@ public class Jesus {
 	public String responseRoleCommand(Command command) {
 		String roleName = command.getParameters().get(0) ;
 		data.setRole(roleName) ;
-		return returnCommand(NULL_RESPONSE) ;
+		return showMessageCommand(command) ;
 	}
 }
 
