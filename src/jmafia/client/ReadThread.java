@@ -12,7 +12,7 @@ public class ReadThread implements Runnable {
 	private Jesus jesus ;
 	private SynchronousQueue<String> queue ;
 	private BufferedReader reader ;
-	private static boolean DEBUG = true ;
+	private static boolean DEBUG = false ;
 	// Constructor
 	public ReadThread(InputStream in , SynchronousQueue<String> queue , Jesus jesus) {
 		this.queue = queue ;

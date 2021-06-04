@@ -12,7 +12,7 @@ public class WriteThread implements Runnable {
 	private Jesus jesus ;
 	private PrintWriter writer ;
 	private SynchronousQueue<String> queue ;
-	private static boolean DEBUG = true ;
+	private static boolean DEBUG = false ;
 	// Constructor
 	public WriteThread(OutputStream out , SynchronousQueue<String> queue , Jesus jesus) {
 		this.jesus = jesus ;
@@ -29,7 +29,7 @@ public class WriteThread implements Runnable {
 		do {
 			String command = null ;
 			try {
-					Thread.currentThread().sleep(50) ;
+				Thread.currentThread().sleep(50) ;
 				} catch ( InterruptedException exception ) {
 					exception.printStackTrace() ;
 				}
@@ -45,10 +45,18 @@ public class WriteThread implements Runnable {
 				exception.printStackTrace() ;
 			}
 			if ( !polled && jesus.data.chatIsOpen() ) {
-				msg = scanner.nextLine() ;
-				sendMessage(msg) ;
-				if ( DEBUG )
-					System.out.println("SENT MSG : " + msg) ;
+				int availableBytes = 0 ;
+				try {
+					availableBytes = System.in.available() ;
+				} catch ( IOException exception ) {
+					exception.printStackTrace() ;
+				}
+				if ( availableBytes > 0 ) {
+					msg = scanner.nextLine() ;
+					sendMessage(msg) ;
+					if ( DEBUG )
+						System.out.println("SENT MSG : " + msg) ;
+				}
 			}
 			polled = false ;
 		} while ( true ) ;

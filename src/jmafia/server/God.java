@@ -83,18 +83,17 @@ public class God {
 
 		String msg = "Introduction Day Has Started !" ;
 		broadcastMessage(msg) ;
-
 		// Open Chatroom for all clients
 		for ( Socket client : data.clients.keySet() )
 			openChatroom(client) ;
 		long timeChatroomOpened = System.currentTimeMillis() ;
 		long timeChatroomClosed = System.currentTimeMillis() ;
 		// Keep Chatroom open for about a minute
-		while ( timeChatroomClosed - timeChatroomOpened < (long)70000 )
+		while ( timeChatroomClosed - timeChatroomOpened < data.chatTimer )
 			timeChatroomClosed = System.currentTimeMillis() ;
-		// TODO : Close Chatroom for all user
-//		for ( Socket client : data.client.keySet() )
-//			closeChatroom(client) ;
+		// Close Chatroom for all user
+		for ( Socket client : data.clients.keySet() )
+			closeChatroom(client) ;
 		// Display Final Message of the Day
 		msg = "Introduction Day Has Ended !" ;
 		broadcastMessage(msg) ;
@@ -173,6 +172,5 @@ public class God {
 	public void closeChatroom(Socket socket) {
 		sendCommand(socket , "CLOSE_CHATROOM") ;
 	}
-	// TODO : Add closeChatroom
 }
 
