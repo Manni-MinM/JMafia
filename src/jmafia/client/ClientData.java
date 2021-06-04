@@ -8,11 +8,14 @@ import jmafia.roles.civilian.* ;
 
 public class ClientData {
 	// Fields
-	private String username ;
+	public String NULL_RESPONSE ;
 	private Role role ;
+	private boolean chatIsOpen ;
+	private String username ;
 	// Constructor
 	public ClientData() {
-		// Pass
+		chatIsOpen = false ;
+		NULL_RESPONSE = "NULL_RESPONSE" ;
 	}
 	// Methods
 	public String getUsername() {
@@ -48,6 +51,12 @@ public class ClientData {
 		} else {
 			this.role = null ;
 		}
+	}
+	public void changeChatState() {
+		chatIsOpen = !chatIsOpen ;
+	}
+	public boolean chatIsOpen() {
+		return chatIsOpen ;
 	}
 }
 

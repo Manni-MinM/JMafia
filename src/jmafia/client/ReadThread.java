@@ -12,7 +12,7 @@ public class ReadThread implements Runnable {
 	private Jesus jesus ;
 	private SynchronousQueue<String> queue ;
 	private BufferedReader reader ;
-	private static boolean DEBUG = false ;
+	private static boolean DEBUG = true ;
 	// Constructor
 	public ReadThread(InputStream in , SynchronousQueue<String> queue , Jesus jesus) {
 		this.queue = queue ;
@@ -30,15 +30,15 @@ public class ReadThread implements Runnable {
 				if ( isCommandMsg(msg) ) {
 					try {
 						if ( DEBUG )
-							System.out.println("RECV : " + msg) ;
+							System.out.println("RECV CMD : " + msg) ;
 						String response = jesus.respond(msg) ;
-						if ( DEBUG )
-							System.out.println("SENT : " + response) ;
 						queue.put(response) ;
 					} catch ( InterruptedException exception ) {
 						exception.printStackTrace() ;
 					}
 				} else {
+					if ( DEBUG )
+						System.out.println("RECV MSG : " + msg) ;
 					System.out.println(msg) ;
 				}
 			}

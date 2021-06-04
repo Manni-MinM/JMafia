@@ -29,21 +29,20 @@ public class God {
 		initRoles() ;
 	}
 	private void initRoles() {
-		// Team Mafia
-		data.roles.add("The GodFather") ;
-		data.roles.add("Doctor Lecter") ;
-		data.roles.add("The Mafia") ;
-		// Team Civilians
-		data.roles.add("The Doctor") ;
 		data.roles.add("The Detective") ;
 		data.roles.add("The Sniper") ;
+		data.roles.add("Doctor Lecter") ;
 		data.roles.add("The Civilian") ;
 		data.roles.add("The Mayor") ;
 		data.roles.add("The Psychologist") ;
 		data.roles.add("The Titan") ;
+		data.roles.add("The GodFather") ;
+		data.roles.add("The Mafia") ;
+		data.roles.add("The Doctor") ;
 		// Shuffle it (i know its random but it doesnt shuffle well on one try ^_^)
-		for ( int it = 0 ; it < 10 ; it ++ )
-			Collections.shuffle(data.roles) ;
+		// TODO : Uncomment below
+//		for ( int it = 0 ; it < 10 ; it ++ )
+//			Collections.shuffle(data.roles) ;
 	}
 	// Public Methods
 	public static God getInstance() {
@@ -66,11 +65,39 @@ public class God {
 				data.civilians.add(data.roleMap.get(roleName)) ;
 			}
 		}
+
+		String msg = "Introduction Night Has Started !" ;
+		broadcastMessage(msg) ;
+
 		String introductionMsgMafia = "The Mafias Are => " ;
 		for ( Socket mafia : data.mafias )
 			introductionMsgMafia += data.clients.get(mafia) + " " ;
 		for ( Socket mafia : data.mafias )
 			sendMessage(mafia , introductionMsgMafia) ;
+		
+		msg = "Introduction Night Has Ended !" ;
+		broadcastMessage(msg) ;
+	}
+	public void runFirstDay() {
+		data.phase = "DAY" ;
+
+		String msg = "Introduction Day Has Started !" ;
+		broadcastMessage(msg) ;
+
+		// Open Chatroom for all clients
+		for ( Socket client : data.clients.keySet() )
+			openChatroom(client) ;
+		long timeChatroomOpened = System.currentTimeMillis() ;
+		long timeChatroomClosed = System.currentTimeMillis() ;
+		// Keep Chatroom open for about a minute
+		while ( timeChatroomClosed - timeChatroomOpened < (long)70000 )
+			timeChatroomClosed = System.currentTimeMillis() ;
+		// TODO : Close Chatroom for all user
+//		for ( Socket client : data.client.keySet() )
+//			closeChatroom(client) ;
+		// Display Final Message of the Day
+		msg = "Introduction Day Has Ended !" ;
+		broadcastMessage(msg) ;
 	}
 	public void sendCommand(Socket socket , String function , String... parameters) {
 		Command serverCommand = new Command() ;
@@ -80,11 +107,16 @@ public class God {
 		for ( String parameter : parameters )
 			serverCommand.addParameter(parameter) ;
 		if ( DEBUG )
-			System.out.println("SENT : [SOCKET : " + socket + " | USERNAME : " + data.clients.get(socket) + "] => " + serverCommand.toString()) ;
+			System.out.println("SENT CMD : [USERNAME : " + data.clients.get(socket) + "] => " + serverCommand.toString()) ;
 		try {
 			PrintWriter writer = new PrintWriter(socket.getOutputStream() , true) ;
 			writer.println(serverCommand.toString()) ;
 		} catch ( IOException exception ) {
+			exception.printStackTrace() ;
+		}
+		try {
+			Thread.currentThread().sleep(50) ;
+		} catch ( InterruptedException exception ) {
 			exception.printStackTrace() ;
 		}
 	}
@@ -100,41 +132,47 @@ public class God {
 			data.clients.put(socket , username) ;
 		}
 		if ( DEBUG )
-			System.out.println("RECV : [SOCKET : " + socket + " | USERNAME : " + username + "] => " + clientCommand.toString()) ;
+			System.out.println("RECV CMD : [USERNAME : " + username + "] => " + clientCommand.toString()) ;
 	}
 	// Commands
 	// TODO : Add Commands Here
+	public void sendWelcomeMessage(Socket socket) {
+		String msg = "Welcome " + data.clients.get(socket) + " !" ;
+		sendMessage(socket , msg) ;
+	}
+	public void broadcastMessage(String msg) {
+		for ( Socket client : data.clients.keySet() )
+			sendMessage(client , msg) ;
+	}
+	public void broadcastUserMessage(Socket socket , String msg) {
+		for ( Socket client : data.clients.keySet() )
+			if ( client != socket ) {
+				try {
+					PrintWriter writer = new PrintWriter(client.getOutputStream() , true) ;
+					writer.println(msg) ;
+				} catch ( IOException exception ) {
+					exception.printStackTrace() ;
+				}
+			}
+	}
 	public void sendMessage(Socket socket , String msg) {
 		sendCommand(socket , "SHOW_MESSAGE" , msg) ;
 	}
-	public void sendWelcomeMessage(Socket socket) {
-		synchronized ( socket ) {
-			String msg = "Welcome " + data.clients.get(socket) + " !" ;
-			sendMessage(socket , msg) ;
-			try {
-				socket.wait() ;
-			} catch ( InterruptedException exception ) {
-				exception.printStackTrace() ;
-			}
-		}
+	public void requestUsername(Socket socket) {
+		sendCommand(socket , "REQUEST_USERNAME") ;
 	}
 	public void sendRole(Socket socket) {
-		synchronized ( socket ) {
-			String roleName = data.roles.get(data.roles.size() - 1) ;
-			data.roles.remove(roleName) ;
-			data.roleMap.put(roleName , socket) ;
-			sendCommand(socket , "GET_ROLE" , roleName) ;
-		}
+		String roleName = data.roles.get(data.roles.size() - 1) ;
+		data.roles.remove(roleName) ;
+		data.roleMap.put(roleName , socket) ;
+		sendCommand(socket , "GET_ROLE" , roleName) ;
 	}
-	public void requestUsername(Socket socket) {
-		synchronized ( socket ) {
-			sendCommand(socket , "REQUEST_USERNAME") ;
-			try {
-				socket.wait() ;
-			} catch ( InterruptedException exception ) {
-				exception.printStackTrace() ;
-			}
-		}
+	public void openChatroom(Socket socket) {
+		sendCommand(socket , "OPEN_CHATROOM") ;
 	}
+	public void closeChatroom(Socket socket) {
+		sendCommand(socket , "CLOSE_CHATROOM") ;
+	}
+	// TODO : Add closeChatroom
 }
 

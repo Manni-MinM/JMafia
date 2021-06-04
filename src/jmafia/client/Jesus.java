@@ -10,7 +10,6 @@ public class Jesus {
 	// Fields
 	public ClientData data ;
 	private Scanner scanner ;
-	private String NULL_RESPONSE = "NULL_RESPONSE" ;
 	// Constructor
 	public Jesus(ClientData data) {
 		this.data = data ;
@@ -21,7 +20,6 @@ public class Jesus {
 		// $user@function:count:param1-param2-param3-...-paramCount
 		Command command = new Command() ;
 		command.parse(msg) ;
-
 		// TODO : add other commands
 		String function = command.getFunction() ;
 		if ( function.equals("SHOW_MESSAGE") ) {
@@ -30,8 +28,12 @@ public class Jesus {
 			return responseUsernameCommand(command) ;
 		} else if ( function.equals("GET_ROLE") ) {
 			return responseRoleCommand(command) ;
+		} else if ( function.equals("OPEN_CHATROOM") ) {
+			return responseOpenChatroom(command) ;
+		} else if ( function.equals("CLOSE_CHATROOM") ) {
+			return responseCloseChatroom(command) ;
 		} else {
-			return returnCommand(NULL_RESPONSE) ;
+			return returnCommand(data.NULL_RESPONSE) ;
 		}
 	}
 	public String returnCommand(String function , String... parameters) {
@@ -48,7 +50,7 @@ public class Jesus {
 	public String showMessageCommand(Command command) {
 		String msg = "[" + command.getUsername() + "]: " + command.getParameters().get(0) ;
 		System.out.println(msg) ;
-		return returnCommand(NULL_RESPONSE) ;
+		return returnCommand(data.NULL_RESPONSE) ;
 	}
 	public String responseUsernameCommand(Command command) {
 		System.out.print("Username : ") ;
@@ -60,6 +62,14 @@ public class Jesus {
 		String roleName = command.getParameters().get(0) ;
 		data.setRole(roleName) ;
 		return showMessageCommand(command) ;
+	}
+	public String responseOpenChatroom(Command command) {
+		data.changeChatState() ;
+		return returnCommand(data.NULL_RESPONSE) ;
+	}
+	public String responseCloseChatroom(Command command) {
+		data.changeChatState() ;
+		return returnCommand(data.NULL_RESPONSE) ;
 	}
 }
 

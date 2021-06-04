@@ -12,6 +12,7 @@ public class Handler implements Runnable {
 	// Fields
 	private Socket socket ;
 	private static God god = God.getInstance() ;
+	private static boolean DEBUG = true ;
 	// Constructor
 	public Handler(Socket socket) {
 		this.socket = socket ;
@@ -21,13 +22,30 @@ public class Handler implements Runnable {
 	public void run() {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream())) ;	
-			
+
 			String clientResponse ;
+
+			// Request Username
+			god.requestUsername(socket) ;
+			clientResponse = reader.readLine() ;
+			god.process(socket , clientResponse) ;
+			// Greet User
+			god.sendWelcomeMessage(socket) ;
+			clientResponse = reader.readLine() ;
+			god.process(socket , clientResponse) ;
+			// Send Role to User
+			god.sendRole(socket) ;
+			clientResponse = reader.readLine() ;
+			god.process(socket , clientResponse) ;
+			
 			while ( true ) {
 				clientResponse = reader.readLine() ;
-				synchronized ( socket ) {
+				if ( isCommandMsg(clientResponse) ) 
 					god.process(socket , clientResponse) ;
-					socket.notify() ;
+				else {
+					if ( DEBUG )
+						System.out.println("RECV MSG : [USERNAME : " + god.data.clients.get(socket) + "] => " + clientResponse) ;
+					god.broadcastUserMessage(socket , clientResponse) ;
 				}
 			}
 		} catch ( SocketException exception ) {
@@ -42,5 +60,8 @@ public class Handler implements Runnable {
 			}
 		}
 	}
+	public boolean isCommandMsg(String msg) {
+		return (msg.charAt(0) == '$') ;
+        }
 }
 

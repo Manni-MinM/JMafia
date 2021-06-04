@@ -12,6 +12,7 @@ public class WriteThread implements Runnable {
 	private Jesus jesus ;
 	private PrintWriter writer ;
 	private SynchronousQueue<String> queue ;
+	private static boolean DEBUG = true ;
 	// Constructor
 	public WriteThread(OutputStream out , SynchronousQueue<String> queue , Jesus jesus) {
 		this.jesus = jesus ;
@@ -24,17 +25,32 @@ public class WriteThread implements Runnable {
 		Scanner scanner = new Scanner(System.in) ;
 
 		String msg = "" ;
+		boolean polled = false ;
 		do {
 			String command = null ;
-			// TODO : clean up
+			try {
+					Thread.currentThread().sleep(50) ;
+				} catch ( InterruptedException exception ) {
+					exception.printStackTrace() ;
+				}
 			try {
 				command = queue.poll() ;
-				sendCommand(command) ;
+				if ( command != null ) {
+					sendCommand(command) ;
+					polled = true ;
+					if ( DEBUG )
+						System.out.println("SENT CMD : " + command) ;
+				}
 			} catch ( Exception exception ) {
 				exception.printStackTrace() ;
 			}
-//			msg = scanner.nextLine() ;
-//			sendMessage(msg) ;
+			if ( !polled && jesus.data.chatIsOpen() ) {
+				msg = scanner.nextLine() ;
+				sendMessage(msg) ;
+				if ( DEBUG )
+					System.out.println("SENT MSG : " + msg) ;
+			}
+			polled = false ;
 		} while ( true ) ;
 	} 
 	public void sendCommand(String command) {

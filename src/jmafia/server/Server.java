@@ -21,12 +21,21 @@ public class Server {
 				Thread handler = new Thread(new Handler(socket)) ;
 				handler.start() ;
 				userCount ++ ;
-
-				god.requestUsername(socket) ;
-				god.sendWelcomeMessage(socket) ;
-				god.sendRole(socket) ;
+			}
+			do {
+				try {
+					Thread.currentThread().sleep(100) ;
+				} catch ( InterruptedException exception ) {
+					exception.printStackTrace() ;
+				}
+			} while ( god.data.clients.keySet().size() < maxCapacity ) ;
+			try {
+				Thread.currentThread().sleep(100) ;
+			} catch ( InterruptedException exception ) {
+				exception.printStackTrace() ;
 			}
 			god.runFirstNight() ;
+			god.runFirstDay() ;
 		} catch ( IOException exception ) {
 			exception.printStackTrace() ;
 		}
