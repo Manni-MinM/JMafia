@@ -28,9 +28,13 @@ public class Jesus {
 			return responseUsernameCommand(command) ;
 		} else if ( function.equals("GET_ROLE") ) {
 			return responseRoleCommand(command) ;
-		} else if ( function.equals("OPEN_CHATROOM") ) {
+		} else if ( function.equals("OPEN_PUBLIC_CHATROOM") ) {
 			return responseOpenChatroom(command) ;
-		} else if ( function.equals("CLOSE_CHATROOM") ) {
+		} else if ( function.equals("CLOSE_PUBLIC_CHATROOM") ) {
+			return responseCloseChatroom(command) ;
+		} else if ( function.equals("OPEN_MAFIA_CHATROOM") ) {
+			return responseOpenChatroom(command) ;
+		} else if ( function.equals("CLOSE_MAFIA_CHATROOM") ) {
 			return responseCloseChatroom(command) ;
 		} else {
 			return returnCommand(data.NULL_RESPONSE) ;

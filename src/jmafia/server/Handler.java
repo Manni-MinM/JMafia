@@ -45,7 +45,13 @@ public class Handler implements Runnable {
 				else {
 					if ( DEBUG )
 						System.out.println("RECV MSG : [USERNAME : " + god.data.clients.get(socket) + "] => " + clientResponse) ;
-					god.broadcastUserMessage(socket , clientResponse) ;
+					if ( god.data.publicChat ) {
+						god.broadcastPublicMessage(socket , clientResponse) ;
+					} else if ( god.data.mafiaChat ) {
+						god.broadcastMafiaMessage(socket , clientResponse) ;
+					} else {
+						// Do Nothing
+					}
 				}
 			}
 		} catch ( SocketException exception ) {

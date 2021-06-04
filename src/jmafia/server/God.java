@@ -85,18 +85,42 @@ public class God {
 		broadcastMessage(msg) ;
 		// Open Chatroom for all clients
 		for ( Socket client : data.clients.keySet() )
-			openChatroom(client) ;
+			openPublicChatroom(client) ;
+		// Keep Chatroom open for about a minute
 		long timeChatroomOpened = System.currentTimeMillis() ;
 		long timeChatroomClosed = System.currentTimeMillis() ;
-		// Keep Chatroom open for about a minute
-		while ( timeChatroomClosed - timeChatroomOpened < data.chatTimer )
+		System.err.println(data.publicChatTimer) ;
+		while ( timeChatroomClosed - timeChatroomOpened < data.publicChatTimer )
 			timeChatroomClosed = System.currentTimeMillis() ;
-		// Close Chatroom for all user
+		// Close Chatroom for all clients
 		for ( Socket client : data.clients.keySet() )
-			closeChatroom(client) ;
+			closePublicChatroom(client) ;
 		// Display Final Message of the Day
 		msg = "Introduction Day Has Ended !" ;
 		broadcastMessage(msg) ;
+	}
+	public void runNight() {
+		data.phase = "NIGHT" ;
+		
+		String msg = "Night " + data.dayCount + " Has Started" ;
+		broadcastMessage(msg) ;
+		// Open Chat for Mafia
+		for ( Socket client : data.mafias )
+			openMafiaChatroom(client) ;
+		// Keep Chatroom open for about half a minute
+		long timeChatroomOpened = System.currentTimeMillis() ;
+		long timeChatroomClosed = System.currentTimeMillis() ;
+		while ( timeChatroomClosed - timeChatroomOpened < data.mafiaChatTimer )
+			timeChatroomClosed = System.currentTimeMillis() ;
+		// Close Chatroom for all clients
+		for ( Socket client : data.mafias )
+			openMafiaChatroom(client) ;
+		// Display Final Message of the Night
+		msg = "Night " + data.dayCount + " Has Ended !" ;
+		broadcastMessage(msg) ;
+	}
+	public void nextDay() {
+		data.dayCount ++ ;
 	}
 	public void sendCommand(Socket socket , String function , String... parameters) {
 		Command serverCommand = new Command() ;
@@ -143,8 +167,19 @@ public class God {
 		for ( Socket client : data.clients.keySet() )
 			sendMessage(client , msg) ;
 	}
-	public void broadcastUserMessage(Socket socket , String msg) {
+	public void broadcastPublicMessage(Socket socket , String msg) {
 		for ( Socket client : data.clients.keySet() )
+			if ( client != socket ) {
+				try {
+					PrintWriter writer = new PrintWriter(client.getOutputStream() , true) ;
+					writer.println(msg) ;
+				} catch ( IOException exception ) {
+					exception.printStackTrace() ;
+				}
+			}
+	}
+	public void broadcastMafiaMessage(Socket socket , String msg) {
+		for ( Socket client : data.mafias )
 			if ( client != socket ) {
 				try {
 					PrintWriter writer = new PrintWriter(client.getOutputStream() , true) ;
@@ -166,11 +201,22 @@ public class God {
 		data.roleMap.put(roleName , socket) ;
 		sendCommand(socket , "GET_ROLE" , roleName) ;
 	}
-	public void openChatroom(Socket socket) {
-		sendCommand(socket , "OPEN_CHATROOM") ;
+	public void openPublicChatroom(Socket socket) {
+		data.publicChat = true ;
+		sendCommand(socket , "OPEN_PUBLIC_CHATROOM") ;
 	}
-	public void closeChatroom(Socket socket) {
-		sendCommand(socket , "CLOSE_CHATROOM") ;
+	public void closePublicChatroom(Socket socket) {
+		data.publicChat = false ;
+		sendCommand(socket , "CLOSE_PUBLIC_CHATROOM") ;
 	}
+	public void openMafiaChatroom(Socket socket) {
+		data.mafiaChat = true ;
+		sendCommand(socket , "OPEN_MAFIA_CHATROOM") ;
+	}
+	public void closeMafiaChatroom(Socket socket) {
+		data.mafiaChat = false ;
+		sendCommand(socket , "CLOSE_MAFIA_CHATROOM") ;
+	}
+
 }
 

@@ -34,8 +34,17 @@ public class Server {
 			} catch ( InterruptedException exception ) {
 				exception.printStackTrace() ;
 			}
+			// Day Zero
 			god.runFirstNight() ;
 			god.runFirstDay() ;
+			god.nextDay() ;
+			// Run Game
+			god.runNight() ;
+//			god.runDay() ;
+//			god.runVoting() ;
+			god.nextDay() ;
+			// End Game
+			
 		} catch ( IOException exception ) {
 			exception.printStackTrace() ;
 		}

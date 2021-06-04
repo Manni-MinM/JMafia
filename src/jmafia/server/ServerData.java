@@ -10,7 +10,11 @@ public class ServerData {
 	// Private Fields
 	private static ServerData data ;
 	// Public Fields
-	public long chatTimer ;
+	public int dayCount ;
+	public long mafiaChatTimer ;
+	public long publicChatTimer ;
+	public boolean mafiaChat ;
+	public boolean publicChat ;
 	public String phase ;
 	public String NULL_RESPONSE ;
 	public ArrayList<String> roles ;
@@ -20,7 +24,11 @@ public class ServerData {
 	public HashMap<Socket , String> clients ;
 	// Constructor
 	private ServerData() {
-		chatTimer = (long)3500 ;
+		dayCount = 0 ;
+		mafiaChatTimer = (long)35000 ;
+		publicChatTimer = (long)35000 ;
+		mafiaChat = false ;
+		publicChat = false ;
 		phase = "NIGHT" ;
 		NULL_RESPONSE = "NULL_RESPONSE" ;
 		roles = new ArrayList<String>() ;
