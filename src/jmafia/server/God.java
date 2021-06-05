@@ -38,13 +38,13 @@ public class God {
 	public void initRoles() {
 		data.roles.add("The Detective") ;
 		data.roles.add("The Sniper") ;
-		data.roles.add("Doctor Lecter") ;
+		data.roles.add("The Mafia") ;
 		data.roles.add("The Civilian") ;
 		data.roles.add("The Mayor") ;
 		data.roles.add("The Psychologist") ;
 		data.roles.add("The Titan") ;
 		data.roles.add("The GodFather") ;
-		data.roles.add("The Mafia") ;
+		data.roles.add("Doctor Lecter") ;
 		data.roles.add("The Doctor") ;
 		// Shuffle it (i know its random but it doesnt shuffle well on one try ^_^)
 		// TODO : Uncomment below
@@ -114,21 +114,93 @@ public class God {
 		// Close Chatroom for all clients
 		for ( Socket client : data.mafias )
 			closeMafiaChatroom(client) ;
-		// Roles do their jobs
 		// Role : GodFather
 		String theGodFather = "The GodFather" ;
-		if ( isAlive(theGodFather) )
+		if ( isAlive(theGodFather) ) {
 			askGodFather(data.roleSocketMap.get(theGodFather)) ;
-		while ( true ) {
-			if ( !data.killed.equals("NULL") ) 
-				break ;
+			while ( true ) {
+				if ( !data.killed.equals("NULL") ) 
+					break ;
+				try {
+					Thread.currentThread().sleep(50) ;
+				} catch ( InterruptedException exception ) {
+					exception.printStackTrace() ;
+				}
+			}
+			data.ready.add(theGodFather) ;
+			System.err.println("killed : " + data.killed) ;
+		}
+		// Role : Doctor Lecter 
+		String doctorLecter = "Doctor Lecter" ;
+		if ( isAlive(doctorLecter) ) {
+			askDoctorLecter(data.roleSocketMap.get(doctorLecter)) ;
+			while ( true ) {
+				if ( !data.savedMafia.equals("NULL") )
+					break ;
+				try {
+					Thread.currentThread().sleep(50) ;
+				} catch ( InterruptedException exception ) {
+					exception.printStackTrace() ;
+				}
+			}
+			data.ready.add(doctorLecter) ;
+			System.err.println("mafia saved : " + data.savedMafia) ;
+		}
+		// Role : The Doctor
+		String theDoctor = "The Doctor" ;
+		if ( isAlive(theDoctor) ) {
+			// TODO : Complete Code
+			data.ready.add(theDoctor) ;
+		}
+		// Role : The Detective
+		String theDetective = "The Detective" ;
+		if ( isAlive(theDetective) ) {
+			// TODO : Complete Code
+			data.ready.add(theDetective) ;
+		}
+		// Role : The Sniper
+		String theSniper = "The Sniper" ;
+		if ( isAlive(theSniper) ) {
+			// TODO : Complete Code
+			data.ready.add(theSniper) ;
+		}
+		// Role : The Psychologist
+		String thePsychologist = "The Psychologist" ;
+		if ( isAlive(thePsychologist) ) {
+			// TODO : Complete Code
+			data.ready.add(thePsychologist) ;
+		}
+		// Role : The Titan
+		String theTitan = "The Titan" ;
+		if ( isAlive(theTitan) ) {
+			// TODO : Complete Code
+			data.ready.add(theTitan) ;
+		}
+		// Role : The Mafia
+		String theMafia = "The Mafia" ;
+		if ( isAlive(theMafia) )
+			data.ready.add(theMafia) ;
+		// Role : The Civilian
+		String theCivilian = "The Civilian" ;
+		if ( isAlive(theCivilian) )
+			data.ready.add(theCivilian) ;
+		// Role : The Mayor
+		String theMayor = "The Mayor" ;
+		if ( isAlive(theMayor) )
+			data.ready.add(theMayor) ;
+		// Check if Everyone has Done their Job
+		do {
 			try {
-				Thread.currentThread().sleep(50) ;
+				Thread.currentThread().sleep(100) ;
 			} catch ( InterruptedException exception ) {
 				exception.printStackTrace() ;
 			}
+		} while ( data.ready.size() < data.alive.size() ) ;
+		try {
+			Thread.currentThread().sleep(100) ;
+		} catch ( InterruptedException exception ) {
+			exception.printStackTrace() ;
 		}
-		System.err.println("Killed : " + data.usernames.get(data.killed)) ;
 		// Display Final Message of the Night
 		msg = "Night " + data.dayCount + " Has Ended !" ;
 		broadcastMessage(msg) ;
@@ -175,6 +247,13 @@ public class God {
 			} else {
 				askGodFather(data.roleSocketMap.get("The GodFather")) ;
 			}
+		} else if ( clientCommand.getFunction().equals("RESPONSE_MAFIA_HEAL") ) {
+			String targetUsername = parameters.get(0) ;
+			if ( isDoctorLecterValid(targetUsername) ) {
+				data.savedMafia = targetUsername ;
+			} else {
+				askDoctorLecter(data.roleSocketMap.get("Doctor Lecter")) ;
+			}
 		}
 		if ( DEBUG )
 			System.out.println("RECV CMD : [USERNAME : " + username + "] => " + clientCommand.toString()) ;
@@ -186,7 +265,6 @@ public class God {
 		return data.usernames.containsKey(targetUsername) ;
 	}
 	public boolean isGodFatherValid(String targetUsername) {
-		// TODO : Complete the method
 		if ( !data.usernames.containsKey(targetUsername) )
 			return false ;
 		Socket targetSocket = data.usernames.get(targetUsername) ;
@@ -195,6 +273,25 @@ public class God {
 			return true ;
 		} else {
 			return false ;
+		}
+	}
+	public boolean isDoctorLecterValid(String targetUsername) {
+		if ( !data.usernames.containsKey(targetUsername) )
+			return false ;
+		Socket targetSocket = data.usernames.get(targetUsername); 
+		Role targetRole = data.socketRoleMap.get(targetSocket) ;
+		if ( targetRole.getName().equals("Doctor Lecter") ) {
+			if ( data.lecterCuredSelf == false ) {
+				data.lecterCuredSelf = true ;
+				return true ;
+			} else {
+				return false ;
+			}
+		} else {
+			if ( targetRole.isAlive() && targetRole.isMafia() )
+				return true ;
+			else
+				return false ;
 		}
 	}
 	// Commands
@@ -262,6 +359,7 @@ public class God {
 		} else {
 			// Do Nothing
 		}
+		data.alive.add(data.socketRoleMap.get(socket).getName()) ;
 		sendCommand(socket , "GET_ROLE" , roleName) ;
 	}
 	public void openPublicChatroom(Socket socket) {
@@ -285,6 +383,9 @@ public class God {
 	}
 	public void askGodFather(Socket socket) {
 		sendCommand(socket , "REQUEST_KILL") ;
+	}
+	public void askDoctorLecter(Socket socket) {
+		sendCommand(socket , "REQUEST_MAFIA_HEAL") ;
 	}
 }
 

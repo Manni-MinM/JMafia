@@ -25,6 +25,7 @@ public class ServerData {
 
 	public String phase ;
 	public String NULL_RESPONSE ;
+	public ArrayList<String> alive ;
 	public ArrayList<String> roles ;
 	public ArrayList<Socket> mafias ;
 	public ArrayList<Socket> civilians ;
@@ -40,6 +41,7 @@ public class ServerData {
 	public String savedCivilian ;
 	public String titanGuessed;
 	public String detectiveGuessed ;
+	public ArrayList<String> ready ;
 	// Constructor
 	private ServerData() {
 		dayCount = 0 ;
@@ -55,6 +57,7 @@ public class ServerData {
 
 		phase = "NIGHT" ;
 		NULL_RESPONSE = "NULL_RESPONSE" ;
+		alive = new ArrayList<String>() ;
 		roles = new ArrayList<String>() ;
 		mafias = new ArrayList<Socket>() ;
 		civilians = new ArrayList<Socket>() ;
@@ -70,6 +73,7 @@ public class ServerData {
 		savedCivilian = "NULL" ;
 		titanGuessed = "NULL" ;
 		detectiveGuessed = "NULL" ;
+		ready = new ArrayList<String>() ;
 	}
 	// Methods
 	public static ServerData getInstance() {
@@ -85,6 +89,7 @@ public class ServerData {
 		savedCivilian = "NULL" ;
 		titanGuessed = "NULL" ;
 		detectiveGuessed = "NULL" ;
+		ready = new ArrayList<String>() ;
 	}
 }
 

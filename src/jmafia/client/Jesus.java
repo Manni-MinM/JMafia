@@ -38,6 +38,8 @@ public class Jesus {
 			return responseCloseChatroom(command) ;
 		} else if ( function.equals("REQUEST_KILL") ) {
 			return responseKillCommand(command) ;
+		} else if ( function.equals("REQUEST_MAFIA_HEAL") ) {
+			return responseMafiaHealCommand(command) ;
 		} else {
 			return returnCommand(data.NULL_RESPONSE) ;
 		}
@@ -73,6 +75,11 @@ public class Jesus {
 		System.out.print("Username of Player You Want to Kill : ") ;
 		String targetUsername = scanner.nextLine() ;
 		return returnCommand("RESPONSE_KILL" , targetUsername) ;
+	}
+	public String responseMafiaHealCommand(Command command) {
+		System.out.print("Username of Player You Want to Heal : ") ;
+		String targetUsername = scanner.nextLine() ;
+		return returnCommand("RESPONSE_MAFIA_HEAL" , targetUsername) ;
 	}
 	public String responseOpenChatroom(Command command) {
 		data.changeChatState() ;
