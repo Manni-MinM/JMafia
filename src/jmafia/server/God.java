@@ -115,6 +115,7 @@ public class God {
 		for ( Socket client : data.mafias )
 			closeMafiaChatroom(client) ;
 		// Roles do their jobs
+		// Role : GodFather
 		String theGodFather = "The GodFather" ;
 		if ( isAlive(theGodFather) )
 			askGodFather(data.roleSocketMap.get(theGodFather)) ;
@@ -126,7 +127,6 @@ public class God {
 			} catch ( InterruptedException exception ) {
 				exception.printStackTrace() ;
 			}
-//			System.err.println(data.killed) ;
 		}
 		System.err.println("Killed : " + data.usernames.get(data.killed)) ;
 		// Display Final Message of the Night
@@ -187,8 +187,15 @@ public class God {
 	}
 	public boolean isGodFatherValid(String targetUsername) {
 		// TODO : Complete the method
+		if ( !data.usernames.containsKey(targetUsername) )
+			return false ;
 		Socket targetSocket = data.usernames.get(targetUsername) ;
-		return true ;
+		Role targetRole = data.socketRoleMap.get(targetSocket) ;
+		if ( targetRole.isAlive() && !targetRole.isMafia() ) {
+			return true ;
+		} else {
+			return false ;
+		}
 	}
 	// Commands
 	// TODO : Add Commands Here
@@ -236,9 +243,9 @@ public class God {
 			data.socketRoleMap.put(socket , new DoctorLecter()) ;
 		} else if ( roleName.equals("The GodFather") ) {
 			data.socketRoleMap.put(socket , new GodFather()) ;
-		} else if ( roleName.equals("Mafia") ) {
+		} else if ( roleName.equals("The Mafia") ) {
 			data.socketRoleMap.put(socket , new Mafia()) ;
-		} else if ( roleName.equals("Civilian") ) {
+		} else if ( roleName.equals("The Civilian") ) {
 			data.socketRoleMap.put(socket , new Civilian()) ;
 		} else if ( roleName.equals("The Detective") ) {
 			data.socketRoleMap.put(socket , new Detective()) ;
