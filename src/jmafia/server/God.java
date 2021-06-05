@@ -23,12 +23,19 @@ public class God {
 		this.data = ServerData.getInstance() ;
 		this.serverName = "The Holy One" ;
 	}
-	// Private Methods
-	private void init() {
+	// Methods
+	public static God getInstance() {
+		if ( god == null ) {
+			god = new God() ;
+			god.init() ;
+		}
+		return god ;
+	}
+	public void init() {
 		// TODO : Add Inits Here
 		initRoles() ;
 	}
-	private void initRoles() {
+	public void initRoles() {
 		data.roles.add("The Detective") ;
 		data.roles.add("The Sniper") ;
 		data.roles.add("Doctor Lecter") ;
@@ -41,28 +48,21 @@ public class God {
 		data.roles.add("The Doctor") ;
 		// Shuffle it (i know its random but it doesnt shuffle well on one try ^_^)
 		// TODO : Uncomment below
-//		for ( int it = 0 ; it < 10 ; it ++ )
-//			Collections.shuffle(data.roles) ;
-	}
-	// Public Methods
-	public static God getInstance() {
-		if ( god == null ) {
-			god = new God() ;
-			god.init() ;
-		}
-		return god ;
+		//		for ( int it = 0 ; it < 10 ; it ++ )
+		//			Collections.shuffle(data.roles) ;
 	}
 	public void runFirstNight() {
 		data.phase = "NIGHT" ;
-		for ( String roleName : data.roleMap.keySet() ) {
+
+		for ( String roleName : data.roleSocketMap.keySet() ) {
 			if ( roleName.equals("The GodFather") ) {
-				data.mafias.add(data.roleMap.get(roleName)) ;
+				data.mafias.add(data.roleSocketMap.get(roleName)) ;
 			} else if ( roleName.equals("Doctor Lecter") ) {
-				data.mafias.add(data.roleMap.get(roleName)) ;
+				data.mafias.add(data.roleSocketMap.get(roleName)) ;
 			} else if ( roleName.equals("The Mafia") ) {
-				data.mafias.add(data.roleMap.get(roleName)) ;
+				data.mafias.add(data.roleSocketMap.get(roleName)) ;
 			} else {
-				data.civilians.add(data.roleMap.get(roleName)) ;
+				data.civilians.add(data.roleSocketMap.get(roleName)) ;
 			}
 		}
 
@@ -74,7 +74,7 @@ public class God {
 			introductionMsgMafia += data.clients.get(mafia) + " " ;
 		for ( Socket mafia : data.mafias )
 			sendMessage(mafia , introductionMsgMafia) ;
-		
+
 		msg = "Introduction Night Has Ended !" ;
 		broadcastMessage(msg) ;
 	}
@@ -89,7 +89,6 @@ public class God {
 		// Keep Chatroom open for about a minute
 		long timeChatroomOpened = System.currentTimeMillis() ;
 		long timeChatroomClosed = System.currentTimeMillis() ;
-		System.err.println(data.publicChatTimer) ;
 		while ( timeChatroomClosed - timeChatroomOpened < data.publicChatTimer )
 			timeChatroomClosed = System.currentTimeMillis() ;
 		// Close Chatroom for all clients
@@ -101,7 +100,7 @@ public class God {
 	}
 	public void runNight() {
 		data.phase = "NIGHT" ;
-		
+
 		String msg = "Night " + data.dayCount + " Has Started" ;
 		broadcastMessage(msg) ;
 		// Open Chat for Mafia
@@ -114,7 +113,22 @@ public class God {
 			timeChatroomClosed = System.currentTimeMillis() ;
 		// Close Chatroom for all clients
 		for ( Socket client : data.mafias )
-			openMafiaChatroom(client) ;
+			closeMafiaChatroom(client) ;
+		// Roles do their jobs
+		String theGodFather = "The GodFather" ;
+		if ( isAlive(theGodFather) )
+			askGodFather(data.roleSocketMap.get(theGodFather)) ;
+		while ( true ) {
+			if ( !data.killed.equals("NULL") ) 
+				break ;
+			try {
+				Thread.currentThread().sleep(50) ;
+			} catch ( InterruptedException exception ) {
+				exception.printStackTrace() ;
+			}
+//			System.err.println(data.killed) ;
+		}
+		System.err.println("Killed : " + data.usernames.get(data.killed)) ;
 		// Display Final Message of the Night
 		msg = "Night " + data.dayCount + " Has Ended !" ;
 		broadcastMessage(msg) ;
@@ -153,9 +167,28 @@ public class God {
 			// Pass
 		} else if ( clientCommand.getFunction().equals("RESPONSE_USERNAME") ) {
 			data.clients.put(socket , username) ;
+			data.usernames.put(username , socket) ;
+		} else if ( clientCommand.getFunction().equals("RESPONSE_KILL") ) {
+			String targetUsername = parameters.get(0) ;
+			if ( isGodFatherValid(targetUsername) ) {
+				data.killed = targetUsername ;
+			} else {
+				askGodFather(data.roleSocketMap.get("The GodFather")) ;
+			}
 		}
 		if ( DEBUG )
 			System.out.println("RECV CMD : [USERNAME : " + username + "] => " + clientCommand.toString()) ;
+	}
+	// Role Methods
+	// TODO : Add Role Methods Here
+	public boolean isAlive(String roleName) {
+		String targetUsername = data.clients.get(data.roleSocketMap.get(roleName)) ;
+		return data.usernames.containsKey(targetUsername) ;
+	}
+	public boolean isGodFatherValid(String targetUsername) {
+		// TODO : Complete the method
+		Socket targetSocket = data.usernames.get(targetUsername) ;
+		return true ;
 	}
 	// Commands
 	// TODO : Add Commands Here
@@ -198,7 +231,30 @@ public class God {
 	public void sendRole(Socket socket) {
 		String roleName = data.roles.get(data.roles.size() - 1) ;
 		data.roles.remove(roleName) ;
-		data.roleMap.put(roleName , socket) ;
+		data.roleSocketMap.put(roleName , socket) ;
+		if ( roleName.equals("Doctor Lecter") ) {
+			data.socketRoleMap.put(socket , new DoctorLecter()) ;
+		} else if ( roleName.equals("The GodFather") ) {
+			data.socketRoleMap.put(socket , new GodFather()) ;
+		} else if ( roleName.equals("Mafia") ) {
+			data.socketRoleMap.put(socket , new Mafia()) ;
+		} else if ( roleName.equals("Civilian") ) {
+			data.socketRoleMap.put(socket , new Civilian()) ;
+		} else if ( roleName.equals("The Detective") ) {
+			data.socketRoleMap.put(socket , new Detective()) ;
+		} else if ( roleName.equals("The Doctor") ) {
+			data.socketRoleMap.put(socket , new Doctor()) ;
+		} else if ( roleName.equals("The Mayor") ) {
+			data.socketRoleMap.put(socket , new Mayor()) ;
+		} else if ( roleName.equals("The Psychologist") ) {
+			data.socketRoleMap.put(socket , new Psychologist()) ;
+		} else if ( roleName.equals("The Sniper") ) {
+			data.socketRoleMap.put(socket , new Sniper()) ;
+		} else if ( roleName.equals("The Titan") ) {
+			data.socketRoleMap.put(socket , new Titan()) ;
+		} else {
+			// Do Nothing
+		}
 		sendCommand(socket , "GET_ROLE" , roleName) ;
 	}
 	public void openPublicChatroom(Socket socket) {
@@ -217,6 +273,11 @@ public class God {
 		data.mafiaChat = false ;
 		sendCommand(socket , "CLOSE_MAFIA_CHATROOM") ;
 	}
-
+	public void readyGodFather(Socket socket) {
+		sendCommand(socket , "READY_KILL") ;
+	}
+	public void askGodFather(Socket socket) {
+		sendCommand(socket , "REQUEST_KILL") ;
+	}
 }
 

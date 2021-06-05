@@ -40,9 +40,9 @@ public class Handler implements Runnable {
 			
 			while ( true ) {
 				clientResponse = reader.readLine() ;
-				if ( isCommandMsg(clientResponse) ) 
+				if ( isCommandMsg(clientResponse) ) {
 					god.process(socket , clientResponse) ;
-				else {
+				} else {
 					if ( DEBUG )
 						System.out.println("RECV MSG : [USERNAME : " + god.data.clients.get(socket) + "] => " + clientResponse) ;
 					if ( god.data.publicChat ) {

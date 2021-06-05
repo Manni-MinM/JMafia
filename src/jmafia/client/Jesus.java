@@ -36,6 +36,8 @@ public class Jesus {
 			return responseOpenChatroom(command) ;
 		} else if ( function.equals("CLOSE_MAFIA_CHATROOM") ) {
 			return responseCloseChatroom(command) ;
+		} else if ( function.equals("REQUEST_KILL") ) {
+			return responseKillCommand(command) ;
 		} else {
 			return returnCommand(data.NULL_RESPONSE) ;
 		}
@@ -66,6 +68,11 @@ public class Jesus {
 		String roleName = command.getParameters().get(0) ;
 		data.setRole(roleName) ;
 		return showMessageCommand(command) ;
+	}
+	public String responseKillCommand(Command command) {
+		System.out.print("Username of Player You Want to Kill : ") ;
+		String targetUsername = scanner.nextLine() ;
+		return returnCommand("RESPONSE_KILL" , targetUsername) ;
 	}
 	public String responseOpenChatroom(Command command) {
 		data.changeChatState() ;
