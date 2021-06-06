@@ -36,13 +36,13 @@ public class God {
 		initRoles() ;
 	}
 	public void initRoles() {
-		data.roles.add("The Detective") ;
 		data.roles.add("The Sniper") ;
 		data.roles.add("The Mafia") ;
 		data.roles.add("The Civilian") ;
 		data.roles.add("The Mayor") ;
 		data.roles.add("The Psychologist") ;
 		data.roles.add("The Titan") ;
+		data.roles.add("The Detective") ;
 		data.roles.add("The GodFather") ;
 		data.roles.add("Doctor Lecter") ;
 		data.roles.add("The Doctor") ;
@@ -127,8 +127,8 @@ public class God {
 					exception.printStackTrace() ;
 				}
 			}
-			data.ready.add(theGodFather) ;
 			System.err.println("killed : " + data.killed) ;
+			data.ready.add(theGodFather) ;
 		}
 		// Role : Doctor Lecter 
 		String doctorLecter = "Doctor Lecter" ;
@@ -143,8 +143,8 @@ public class God {
 					exception.printStackTrace() ;
 				}
 			}
-			data.ready.add(doctorLecter) ;
 			System.err.println("mafia saved : " + data.savedMafia) ;
+			data.ready.add(doctorLecter) ;
 		}
 		// Role : The Doctor
 		String theDoctor = "The Doctor" ;
@@ -159,13 +159,31 @@ public class God {
 					exception.printStackTrace() ;
 				}
 			}
-			data.ready.add(theDoctor) ;
 			System.err.println("civilian saved : " + data.savedCivilian) ;
+			data.ready.add(theDoctor) ;
 		}
 		// Role : The Detective
 		String theDetective = "The Detective" ;
 		if ( isAlive(theDetective) ) {
-			// TODO : Complete Code
+			askDetective(data.roleSocketMap.get(theDetective)) ;
+			while ( true ) {
+				if ( !data.detectiveGuessed.equals("NULL") )
+					break ;
+				try {
+					Thread.currentThread().sleep(50) ;
+				} catch ( InterruptedException exception ) {
+					exception.printStackTrace() ;
+				}
+			}
+			Socket targetSocket = data.usernames.get(data.detectiveGuessed) ;
+			Role targetRole = data.socketRoleMap.get(targetSocket) ;
+			if ( targetRole.detectedMafia() ) {
+				sendMessage(data.roleSocketMap.get(theDetective) , "YES") ;
+				System.err.println("detective guessed : " + data.detectiveGuessed + " | guess : correct") ;
+			} else {
+				sendMessage(data.roleSocketMap.get(theDetective) , "NO") ;
+				System.err.println("detective guessed : " + data.detectiveGuessed + " | guess : wrong") ;
+			}
 			data.ready.add(theDetective) ;
 		}
 		// Role : The Sniper
@@ -273,6 +291,15 @@ public class God {
 			} else {
 				askTheDoctor(data.roleSocketMap.get("The Doctor")) ;
 			}
+		} else if ( clientCommand.getFunction().equals("RESPONSE_DETECTIVE_GUESS") ) {
+			String targetUsername = parameters.get(0) ;
+			if ( isDetectiveValid(targetUsername) ) {
+				data.detectiveGuessed = targetUsername ;
+			} else {
+				askDetective(data.roleSocketMap.get("The Detective")) ;
+			}
+		} else {
+			// Do Nothing
 		}
 	}
 	// Role Methods
@@ -329,6 +356,17 @@ public class God {
 				return true ;
 			else
 				return false ;
+		}
+	}
+	public boolean isDetectiveValid(String targetUsername) {
+		if ( !data.usernames.containsKey(targetUsername) )
+			return false ;
+		Socket targetSocket = data.usernames.get(targetUsername) ;
+		Role targetRole = data.socketRoleMap.get(targetSocket) ;
+		if ( targetRole.isAlive() ) {
+			return true ;
+		} else {
+			return false ;
 		}
 	}
 	// Commands
@@ -426,6 +464,9 @@ public class God {
 	}
 	public void askTheDoctor(Socket socket) {
 		sendCommand(socket , "REQUEST_CIVILIAN_HEAL") ;
+	}
+	public void askDetective(Socket socket) {
+		sendCommand(socket , "REQUEST_DETECTIVE_GUESS") ;
 	}
 }
 

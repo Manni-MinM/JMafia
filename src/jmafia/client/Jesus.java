@@ -42,6 +42,8 @@ public class Jesus {
 			return responseMafiaHealCommand(command) ;
 		} else if ( function.equals("REQUEST_CIVILIAN_HEAL") ) {
 			return responseCivilianHealCommand(command) ;
+		} else if ( function.equals("REQUEST_DETECTIVE_GUESS") ) {
+			return responseDetectiveGuessCommand(command) ;
 		} else {
 			return returnCommand(data.NULL_RESPONSE) ;
 		}
@@ -87,6 +89,11 @@ public class Jesus {
 		System.out.print("Username of Civilian You Want to Heal : ") ;
 		String targetUsername = scanner.nextLine() ;
 		return returnCommand("RESPONSE_CIVILIAN_HEAL" , targetUsername) ;
+	}
+	public String responseDetectiveGuessCommand(Command command) {
+		System.out.print("Username of Player You Suspect : ") ;
+		String targetUsername = scanner.nextLine() ;
+		return returnCommand("RESPONSE_DETECTIVE_GUESS" , targetUsername) ;
 	}
 	public String responseOpenChatroom(Command command) {
 		data.changeChatState() ;

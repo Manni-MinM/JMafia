@@ -10,7 +10,7 @@ public class GodFather extends Role {
 		lives = 1 ;
 		name = "The GodFather" ;
 		isMafia = true ;
-		detectedMafia = true ;
+		detectedMafia = false ;
 	}
 }
 
