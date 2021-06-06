@@ -40,6 +40,8 @@ public class Jesus {
 			return responseKillCommand(command) ;
 		} else if ( function.equals("REQUEST_MAFIA_HEAL") ) {
 			return responseMafiaHealCommand(command) ;
+		} else if ( function.equals("REQUEST_CIVILIAN_HEAL") ) {
+			return responseCivilianHealCommand(command) ;
 		} else {
 			return returnCommand(data.NULL_RESPONSE) ;
 		}
@@ -77,9 +79,14 @@ public class Jesus {
 		return returnCommand("RESPONSE_KILL" , targetUsername) ;
 	}
 	public String responseMafiaHealCommand(Command command) {
-		System.out.print("Username of Player You Want to Heal : ") ;
+		System.out.print("Username of Mafia You Want to Heal : ") ;
 		String targetUsername = scanner.nextLine() ;
 		return returnCommand("RESPONSE_MAFIA_HEAL" , targetUsername) ;
+	}
+	public String responseCivilianHealCommand(Command command) {
+		System.out.print("Username of Civilian You Want to Heal : ") ;
+		String targetUsername = scanner.nextLine() ;
+		return returnCommand("RESPONSE_CIVILIAN_HEAL" , targetUsername) ;
 	}
 	public String responseOpenChatroom(Command command) {
 		data.changeChatState() ;

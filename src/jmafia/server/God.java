@@ -149,8 +149,18 @@ public class God {
 		// Role : The Doctor
 		String theDoctor = "The Doctor" ;
 		if ( isAlive(theDoctor) ) {
-			// TODO : Complete Code
+			askTheDoctor(data.roleSocketMap.get(theDoctor)) ;
+			while ( true ) {
+				if ( !data.savedCivilian.equals("NULL") )
+					break ;
+				try {
+					Thread.currentThread().sleep(50) ;
+				} catch ( InterruptedException exception ) {
+					exception.printStackTrace() ;
+				}
+			}
 			data.ready.add(theDoctor) ;
+			System.err.println("civilian saved : " + data.savedCivilian) ;
 		}
 		// Role : The Detective
 		String theDetective = "The Detective" ;
@@ -233,6 +243,8 @@ public class God {
 		Command clientCommand = new Command() ;
 		clientCommand.parse(msg) ;
 		String username = clientCommand.getUsername() ;
+		if ( DEBUG )
+			System.out.println("RECV CMD : [USERNAME : " + username + "] => " + clientCommand.toString()) ;
 		String function = clientCommand.getFunction() ;
 		ArrayList<String> parameters = clientCommand.getParameters() ;
 		if ( clientCommand.getFunction().equals("NULL_RESPONSE") ) {
@@ -254,9 +266,14 @@ public class God {
 			} else {
 				askDoctorLecter(data.roleSocketMap.get("Doctor Lecter")) ;
 			}
+		} else if ( clientCommand.getFunction().equals("RESPONSE_CIVILIAN_HEAL") ) {
+			String targetUsername = parameters.get(0) ;
+			if ( isTheDoctorValid(targetUsername) ) {
+				data.savedCivilian = targetUsername ;
+			} else {
+				askTheDoctor(data.roleSocketMap.get("The Doctor")) ;
+			}
 		}
-		if ( DEBUG )
-			System.out.println("RECV CMD : [USERNAME : " + username + "] => " + clientCommand.toString()) ;
 	}
 	// Role Methods
 	// TODO : Add Role Methods Here
@@ -289,6 +306,26 @@ public class God {
 			}
 		} else {
 			if ( targetRole.isAlive() && targetRole.isMafia() )
+				return true ;
+			else
+				return false ;
+		}
+	}
+	public boolean isTheDoctorValid(String targetUsername) {
+		System.err.println("ENTERED CHECK METHOD") ;
+		if ( !data.usernames.containsKey(targetUsername) )
+			return false ;
+		Socket targetSocket = data.usernames.get(targetUsername); 
+		Role targetRole = data.socketRoleMap.get(targetSocket) ;
+		if ( targetRole.getName().equals("The Doctor") ) {
+			if ( data.doctorCuredSelf == false ) {
+				data.doctorCuredSelf = true ;
+				return true ;
+			} else {
+				return false ;
+			}
+		} else {
+			if ( targetRole.isAlive() )
 				return true ;
 			else
 				return false ;
@@ -386,6 +423,9 @@ public class God {
 	}
 	public void askDoctorLecter(Socket socket) {
 		sendCommand(socket , "REQUEST_MAFIA_HEAL") ;
+	}
+	public void askTheDoctor(Socket socket) {
+		sendCommand(socket , "REQUEST_CIVILIAN_HEAL") ;
 	}
 }
 
