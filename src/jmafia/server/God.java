@@ -130,7 +130,6 @@ public class God {
 					exception.printStackTrace() ;
 				}
 			}
-			System.err.println("killed : " + data.killed) ;
 			data.ready.add(theGodFather) ;
 		}
 		// Role : Doctor Lecter 
@@ -146,7 +145,6 @@ public class God {
 					exception.printStackTrace() ;
 				}
 			}
-			System.err.println("mafia saved : " + data.savedMafia) ;
 			data.ready.add(doctorLecter) ;
 		}
 		// Role : The Doctor
@@ -162,7 +160,6 @@ public class God {
 					exception.printStackTrace() ;
 				}
 			}
-			System.err.println("civilian saved : " + data.savedCivilian) ;
 			data.ready.add(theDoctor) ;
 		}
 		// Role : The Detective
@@ -182,10 +179,8 @@ public class God {
 			Role targetRole = data.socketRoleMap.get(targetSocket) ;
 			if ( targetRole.detectedMafia() ) {
 				sendMessage(data.roleSocketMap.get(theDetective) , "YES") ;
-				System.err.println("detective guessed : " + data.detectiveGuessed + " | guess : correct") ;
 			} else {
 				sendMessage(data.roleSocketMap.get(theDetective) , "NO") ;
-				System.err.println("detective guessed : " + data.detectiveGuessed + " | guess : wrong") ;
 			}
 			data.ready.add(theDetective) ;
 		}
@@ -202,7 +197,6 @@ public class God {
 					exception.printStackTrace() ;
 				}
 			}
-			System.err.println("sniped : " + data.sniped) ;
 			data.ready.add(theSniper) ;
 		}
 		// Role : The Psychologist
@@ -218,7 +212,6 @@ public class God {
 					exception.printStackTrace() ;
 				}
 			}
-			System.err.println("silenced : " + data.silenced) ;
 			data.ready.add(thePsychologist) ;
 		}
 		// Role : The Titan
@@ -241,10 +234,8 @@ public class God {
 				Role targetRole = data.socketRoleMap.get(targetSocket) ;
 				if ( targetRole.detectedMafia() ) {
 					sendMessage(data.roleSocketMap.get(theTitan) , "YES") ;
-					System.err.println("titan guessed : " + data.titanGuessed + " | guess : correct") ;
 				} else {
 					sendMessage(data.roleSocketMap.get(theTitan) , "NO") ;
-					System.err.println("titan guessed : " + data.titanGuessed + " | guess : wrong") ;
 				}
 			}
 			data.ready.add(theTitan) ;
@@ -274,9 +265,127 @@ public class God {
 		} catch ( InterruptedException exception ) {
 			exception.printStackTrace() ;
 		}
+		// Night Aftermath :
+		String killed = data.killed ;
+		Socket killedSocket = null ;
+		Role killedRole = null ;
+		if ( !killed.equals("NULL") ) {
+			killedSocket = data.usernames.get(killed) ;
+			killedRole = data.socketRoleMap.get(killedSocket) ;
+			if ( DEBUG )
+				System.out.println("GAME DETAILS => Killed : " + killed + " | Role : " + killedRole.getName()) ;
+		} else {
+			killed = null ;
+		}
+
+		String savedMafia = data.savedMafia ;
+		Socket savedMafiaSocket = null ;
+		Role savedMafiaRole = null ;
+		if ( !savedMafia.equals("NULL") ) {
+			savedMafiaSocket = data.usernames.get(savedMafia) ;
+			savedMafiaRole = data.socketRoleMap.get(savedMafiaSocket) ;
+			if ( DEBUG )
+				System.out.println("GAME DETAILS => Saved By Lecter : " + savedMafia + " | Role : " + savedMafiaRole.getName()) ;
+		} else {
+			savedMafia = null ;
+		}
+
+		String savedCivilian = data.savedCivilian ;
+		Socket savedCivilianSocket = null ;
+		Role savedCivilianRole = null ;
+		if ( !savedCivilian.equals("NULL") ) {
+			savedCivilianSocket = data.usernames.get(savedCivilian) ;
+			savedCivilianRole = data.socketRoleMap.get(savedCivilianSocket) ;
+			if ( DEBUG )
+				System.out.println("GAME DETAILS => Saved By Doctor : " + savedCivilian + " | Role : " + savedCivilianRole.getName()) ;
+		} else {
+			savedCivilian = null ;
+		}
+
+		String detectiveGuessed = data.detectiveGuessed ;
+		Socket detectiveGuessedSocket = null ;
+		Role detectiveGuessedRole = null ;
+		if ( !detectiveGuessed.equals("NULL") ) {
+			detectiveGuessedSocket = data.usernames.get(detectiveGuessed) ;
+			detectiveGuessedRole = data.socketRoleMap.get(detectiveGuessedSocket) ;
+			if ( DEBUG )
+				System.out.println("GAME DETAILS => Guessed By Detective : " + detectiveGuessed + " | Role : " + detectiveGuessedRole.getName()) ;
+		} else {
+			detectiveGuessed = null ;
+		}
+
+		String sniped = data.sniped ;
+		Socket snipedSocket = null ;
+		Role snipedRole = null ;
+		if ( !(sniped.equals("NULL") || sniped.equals("PASS")) ) {
+			snipedSocket = data.usernames.get(sniped) ;
+			snipedRole = data.socketRoleMap.get(snipedSocket) ;
+			if ( DEBUG )
+				System.out.println("GAME DETAILS => Sniped : " + sniped + " | Role : " + snipedRole.getName()) ;
+		} else {
+			sniped = null ;
+		}
+
+		String silenced = data.silenced ;
+		Socket silencedSocket = null ;
+		Role silencedRole = null ;
+		if ( !(silenced.equals("NULL") || silenced.equals("PASS")) ) {
+			silencedSocket = data.usernames.get(silenced) ;
+			silencedRole = data.socketRoleMap.get(silencedSocket) ;
+			if ( DEBUG )
+				System.out.println("GAME DETAILS => Silenced : " + silenced + " | Role : " + silencedRole.getName()) ;
+		} else {
+			silenced = null ;
+		}
+
+		String titanGuessed = data.titanGuessed ;
+		Socket titanGuessedSocket = null ;
+		Role titanGuessedRole = null ;
+		if ( !(titanGuessed.equals("NULL") || titanGuessed.equals("PASS")) ) {
+			titanGuessedSocket = data.usernames.get(titanGuessed) ;
+			titanGuessedRole = data.socketRoleMap.get(titanGuessedSocket) ;
+			if ( DEBUG )
+				System.out.println("GAME DETAILS => Guessed By Titan : " + titanGuessed + " | Role : " + titanGuessedRole.getName()) ;
+		} else {
+			titanGuessed = null ;
+		}
+
+		if ( killed != null ) {
+			if ( savedCivilian != null && killed.equals(savedCivilian) ) {
+				// Do Nothing
+			} else {
+				killedRole.kill() ;
+			}
+		}
+		if ( sniped != null ) {
+			if ( savedMafia != null && sniped.equals(savedMafia) ) {
+				// Do Nothing
+			} else {
+				snipedRole.kill() ;
+			}
+		}
+		// TODO : Add Feat Sniper dies if civilian is sniped
+
+		if ( silenced != null )
+			silencedRole.changeCanSpeakState() ;
+
+		ArrayList<Socket> listDisconnect = new ArrayList<Socket>() ;
+		for ( Socket client : data.clients.keySet() ) {
+			Role role = data.socketRoleMap.get(client) ;
+			if ( !role.isAlive() ) {
+				disconnect(client) ;
+				listDisconnect.add(client) ;
+			}
+		}
+		for ( Socket client : listDisconnect )
+			data.clients.remove(client) ;
 		// Display Final Message of the Night
 		msg = "Night " + data.dayCount + " Has Ended !" ;
 		broadcastMessage(msg) ;
+	}
+	public void runDay() {
+		// TODO : Show Alive Players 
+		// TODO : Silence the Player
 	}
 	public void nextDay() {
 		data.dayCount ++ ;
@@ -577,6 +686,11 @@ public class God {
 	}
 	public void askTitan(Socket socket) {
 		sendCommand(socket , "REQUEST_TITAN_GUESS") ;
+	}
+	public void disconnect(Socket socket) {
+		data.alive.remove(data.socketRoleMap.get(socket).getName()) ;
+		sendMessage(socket , "YOU DIED !") ;
+		sendCommand(socket , "REQUEST_DISCONNECT") ;
 	}
 }
 

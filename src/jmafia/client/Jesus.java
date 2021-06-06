@@ -50,6 +50,8 @@ public class Jesus {
 			return responseSilencedCommand(command) ;
 		} else if ( function.equals("REQUEST_TITAN_GUESS") ) {
 			return responseTitanGuessCommand(command) ;
+		} else if ( function.equals("REQUEST_DISCONNECT") ) {
+			return responseDisconnectCommand(command) ;
 		} else {
 			return returnCommand(data.NULL_RESPONSE) ;
 		}
@@ -122,6 +124,10 @@ public class Jesus {
 	}
 	public String responseCloseChatroom(Command command) {
 		data.changeChatState() ;
+		return returnCommand(data.NULL_RESPONSE) ;
+	}
+	public String responseDisconnectCommand(Command command) {
+		// TODO : Disconnect
 		return returnCommand(data.NULL_RESPONSE) ;
 	}
 }

@@ -38,6 +38,9 @@ public abstract class Role {
 		if ( lives == 0 )
 			isAlive = false ;
 	}
+	public void changeCanSpeakState() {
+		canSpeak = !canSpeak ;
+	}
 	@Override
 	public String toString() {
 		return name + " {\n" +
