@@ -44,6 +44,10 @@ public class Jesus {
 			return responseCivilianHealCommand(command) ;
 		} else if ( function.equals("REQUEST_DETECTIVE_GUESS") ) {
 			return responseDetectiveGuessCommand(command) ;
+		} else if ( function.equals("REQUEST_SNIPER_KILL") ) {
+			return responseSniperKillCommand(command) ;
+		} else if ( function.equals("REQUEST_SILENCED") ) {
+			return responseSilencedCommand(command) ;
 		} else {
 			return returnCommand(data.NULL_RESPONSE) ;
 		}
@@ -76,24 +80,34 @@ public class Jesus {
 		return showMessageCommand(command) ;
 	}
 	public String responseKillCommand(Command command) {
-		System.out.print("Username of Player You Want to Kill : ") ;
+		System.out.print("[The Holy One]: Username of Player You Want to Kill ? ") ;
 		String targetUsername = scanner.nextLine() ;
 		return returnCommand("RESPONSE_KILL" , targetUsername) ;
 	}
 	public String responseMafiaHealCommand(Command command) {
-		System.out.print("Username of Mafia You Want to Heal : ") ;
+		System.out.print("[The Holy One]: Username of Mafia You Want to Heal ? ") ;
 		String targetUsername = scanner.nextLine() ;
 		return returnCommand("RESPONSE_MAFIA_HEAL" , targetUsername) ;
 	}
 	public String responseCivilianHealCommand(Command command) {
-		System.out.print("Username of Civilian You Want to Heal : ") ;
+		System.out.print("[The Holy One]: Username of Civilian You Want to Heal ? ") ;
 		String targetUsername = scanner.nextLine() ;
 		return returnCommand("RESPONSE_CIVILIAN_HEAL" , targetUsername) ;
 	}
 	public String responseDetectiveGuessCommand(Command command) {
-		System.out.print("Username of Player You Suspect : ") ;
+		System.out.print("[The Holy One]: Username of Player You Suspect ? ") ;
 		String targetUsername = scanner.nextLine() ;
 		return returnCommand("RESPONSE_DETECTIVE_GUESS" , targetUsername) ;
+	}
+	public String responseSniperKillCommand(Command command) {
+		System.out.print("[The Holy One]: Username of Player You Want to Kill or \"PASS\" if You Dont Want to Kill Tonight ? ") ;
+		String targetUsername = scanner.nextLine() ;
+		return returnCommand("RESPONSE_SNIPER_KILL" , targetUsername) ;
+	}
+	public String responseSilencedCommand(Command command) {
+		System.out.print("[The Holy One]: Username of Player You Want to Silence or \"PASS\" if You Dont Want to Kill Tonight ? ") ;
+		String targetUsername = scanner.nextLine() ;
+		return returnCommand("RESPONSE_SILENCED" , targetUsername) ;
 	}
 	public String responseOpenChatroom(Command command) {
 		data.changeChatState() ;

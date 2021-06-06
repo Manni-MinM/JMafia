@@ -32,21 +32,19 @@ public class God {
 		return god ;
 	}
 	public void init() {
-		// TODO : Add Inits Here
 		initRoles() ;
 	}
 	public void initRoles() {
-		data.roles.add("The Sniper") ;
 		data.roles.add("The Mafia") ;
 		data.roles.add("The Civilian") ;
 		data.roles.add("The Mayor") ;
-		data.roles.add("The Psychologist") ;
 		data.roles.add("The Titan") ;
+		data.roles.add("The Psychologist") ;
+		data.roles.add("The Sniper") ;
 		data.roles.add("The Detective") ;
 		data.roles.add("The GodFather") ;
 		data.roles.add("Doctor Lecter") ;
 		data.roles.add("The Doctor") ;
-		// Shuffle it (i know its random but it doesnt shuffle well on one try ^_^)
 		// TODO : Uncomment below
 		//		for ( int it = 0 ; it < 10 ; it ++ )
 		//			Collections.shuffle(data.roles) ;
@@ -189,13 +187,33 @@ public class God {
 		// Role : The Sniper
 		String theSniper = "The Sniper" ;
 		if ( isAlive(theSniper) ) {
-			// TODO : Complete Code
+			askSniper(data.roleSocketMap.get(theSniper)) ;
+			while ( true ) {
+				if ( !data.sniped.equals("NULL") )
+					break ;
+				try {
+					Thread.currentThread().sleep(50) ;
+				} catch ( InterruptedException exception ) {
+					exception.printStackTrace() ;
+				}
+			}
+			System.err.println("sniped : " + data.sniped) ;
 			data.ready.add(theSniper) ;
 		}
 		// Role : The Psychologist
 		String thePsychologist = "The Psychologist" ;
 		if ( isAlive(thePsychologist) ) {
-			// TODO : Complete Code
+			askPsychologist(data.roleSocketMap.get(thePsychologist)) ;
+			while ( true ) {
+				if ( !data.silenced.equals("NULL") )
+					break ;
+				try {
+					Thread.currentThread().sleep(50) ;
+				} catch ( InterruptedException exception ) {
+					exception.printStackTrace() ;
+				}
+			}
+			System.err.println("silenced : " + data.silenced) ;
 			data.ready.add(thePsychologist) ;
 		}
 		// Role : The Titan
@@ -298,6 +316,20 @@ public class God {
 			} else {
 				askDetective(data.roleSocketMap.get("The Detective")) ;
 			}
+		} else if ( clientCommand.getFunction().equals("RESPONSE_SNIPER_KILL") ) {
+			String targetUsername = parameters.get(0) ;
+			if ( isSniperValid(targetUsername) ) {
+				data.sniped = targetUsername ;
+			} else {
+				askSniper(data.roleSocketMap.get("The Sniper")) ;
+			}
+		} else if ( clientCommand.getFunction().equals("RESPONSE_SILENCED") ) {
+			String targetUsername = parameters.get(0) ;
+			if ( isPsychologistValid(targetUsername) ) {
+				data.silenced = targetUsername ;
+			} else {
+				askPsychologist(data.roleSocketMap.get("The Psychologist")) ;
+			}
 		} else {
 			// Do Nothing
 		}
@@ -339,7 +371,6 @@ public class God {
 		}
 	}
 	public boolean isTheDoctorValid(String targetUsername) {
-		System.err.println("ENTERED CHECK METHOD") ;
 		if ( !data.usernames.containsKey(targetUsername) )
 			return false ;
 		Socket targetSocket = data.usernames.get(targetUsername); 
@@ -359,6 +390,32 @@ public class God {
 		}
 	}
 	public boolean isDetectiveValid(String targetUsername) {
+		if ( !data.usernames.containsKey(targetUsername) )
+			return false ;
+		Socket targetSocket = data.usernames.get(targetUsername) ;
+		Role targetRole = data.socketRoleMap.get(targetSocket) ;
+		if ( targetRole.isAlive() ) {
+			return true ;
+		} else {
+			return false ;
+		}
+	}
+	public boolean isSniperValid(String targetUsername) {
+		if ( targetUsername.equals("PASS") )
+			return true ;
+		if ( !data.usernames.containsKey(targetUsername) )
+			return false ;
+		Socket targetSocket = data.usernames.get(targetUsername) ;
+		Role targetRole = data.socketRoleMap.get(targetSocket) ;
+		if ( targetRole.isAlive() ) {
+			return true ;
+		} else {
+			return false ;
+		}
+	}
+	public boolean isPsychologistValid(String targetUsername) {
+		if ( targetUsername.equals("PASS") )
+			return true ;
 		if ( !data.usernames.containsKey(targetUsername) )
 			return false ;
 		Socket targetSocket = data.usernames.get(targetUsername) ;
@@ -453,9 +510,6 @@ public class God {
 		data.mafiaChat = false ;
 		sendCommand(socket , "CLOSE_MAFIA_CHATROOM") ;
 	}
-	public void readyGodFather(Socket socket) {
-		sendCommand(socket , "READY_KILL") ;
-	}
 	public void askGodFather(Socket socket) {
 		sendCommand(socket , "REQUEST_KILL") ;
 	}
@@ -467,6 +521,12 @@ public class God {
 	}
 	public void askDetective(Socket socket) {
 		sendCommand(socket , "REQUEST_DETECTIVE_GUESS") ;
+	}
+	public void askSniper(Socket socket) {
+		sendCommand(socket , "REQUEST_SNIPER_KILL") ;
+	}
+	public void askPsychologist(Socket socket) {
+		sendCommand(socket , "REQUEST_SILENCED") ;
 	}
 }
 
