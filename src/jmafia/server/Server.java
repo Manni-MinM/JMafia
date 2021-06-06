@@ -39,11 +39,13 @@ public class Server {
 			god.runFirstDay() ;
 			god.nextDay() ;
 			// Run Game
-			god.runNight() ;
-//			god.runDay() ;
-//			god.runVoting() ;
-			god.nextDay() ;
-			// End Game
+			while ( !god.endgame() ) {
+				god.runNight() ;
+				god.runDay() ;
+//				god.runVoting() ;
+				god.nextDay() ;
+			}
+			// End Game : Clean Up
 			
 		} catch ( IOException exception ) {
 			exception.printStackTrace() ;

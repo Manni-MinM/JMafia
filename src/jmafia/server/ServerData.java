@@ -45,8 +45,8 @@ public class ServerData {
 	// Constructor
 	private ServerData() {
 		dayCount = 0 ;
-		mafiaChatTimer = /*(long)35000*/ (long)3000 ;
-		publicChatTimer = /*(long)70000*/ (long)3000 ;
+		mafiaChatTimer = /*(long)60000*/ (long)30000 ;
+		publicChatTimer = /*(long)300000*/ (long)30000 ;
 		mafiaChat = false ;
 		publicChat = false ;
 

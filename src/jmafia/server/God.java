@@ -67,12 +67,7 @@ public class God {
 		String msg = "Introduction Night Has Started !" ;
 		broadcastMessage(msg) ;
 
-		msg = "The Players Are => " ;
-		for ( String username : data.usernames.keySet() )
-			msg += username + " " ;
-		broadcastMessage(msg) ;
-
-		String introductionMsgMafia = "The Mafias Are => " ;
+		String introductionMsgMafia = "Mafias => " ;
 		for ( Socket mafia : data.mafias )
 			introductionMsgMafia += data.clients.get(mafia) + " " ;
 		for ( Socket mafia : data.mafias )
@@ -85,6 +80,11 @@ public class God {
 		data.phase = "DAY" ;
 
 		String msg = "Introduction Day Has Started !" ;
+		broadcastMessage(msg) ;
+		// Show All Players
+		msg = "Players Alive => " ;
+		for ( String username : data.usernames.keySet() )
+			msg += username + " " ;
 		broadcastMessage(msg) ;
 		// Open Chatroom for all clients
 		for ( Socket client : data.clients.keySet() )
@@ -361,10 +361,14 @@ public class God {
 			if ( savedMafia != null && sniped.equals(savedMafia) ) {
 				// Do Nothing
 			} else {
+				if ( !snipedRole.isMafia() ) {
+					Socket sniperSocket = data.roleSocketMap.get(theSniper) ;
+					Role sniperRole = data.socketRoleMap.get(sniperSocket) ;
+					sniperRole.kill() ;
+				}
 				snipedRole.kill() ;
 			}
 		}
-		// TODO : Add Feat Sniper dies if civilian is sniped
 
 		if ( silenced != null )
 			silencedRole.changeCanSpeakState() ;
@@ -384,11 +388,53 @@ public class God {
 		broadcastMessage(msg) ;
 	}
 	public void runDay() {
-		// TODO : Show Alive Players 
-		// TODO : Silence the Player
+		data.phase = "DAY" ;
+		
+		String msg = "Day " + data.dayCount + " Has Started !" ;
+		broadcastMessage(msg) ;
+		// Show Alive Players 
+		msg = "Players Alive => " ;
+		for ( String username : data.usernames.keySet() ) {
+			Socket socket = data.usernames.get(username) ;
+			if ( data.clients.containsKey(socket) )
+				msg += username + " " ;
+		}
+		broadcastMessage(msg) ;
+		// Open Chatroom for all clients
+		for ( Socket client : data.clients.keySet() ) {
+			Role role = data.socketRoleMap.get(client) ;
+			if ( role.canSpeak() )
+				openPublicChatroom(client) ;
+		}
+		// Keep Chatroom open for about a minute
+		long timeChatroomOpened = System.currentTimeMillis() ;
+		long timeChatroomClosed = System.currentTimeMillis() ;
+		while ( timeChatroomClosed - timeChatroomOpened < data.publicChatTimer )
+			timeChatroomClosed = System.currentTimeMillis() ;
+		// Close Chatroom for all clients
+		for ( Socket client : data.clients.keySet() ) {
+			Role role = data.socketRoleMap.get(client) ;
+			if ( role.canSpeak() )
+				closePublicChatroom(client) ;
+		}
+		// Display Final Message of the Day
+		msg = "Day " + data.dayCount + " Has Ended !" ;
+		broadcastMessage(msg) ;
 	}
 	public void nextDay() {
+		if ( !(data.silenced == null || data.silenced.equals("NULL")) ) {
+			Socket silencedSocket = data.usernames.get(data.silenced) ;
+			if ( data.clients.containsKey(silencedSocket) ) {
+				Role silencedRole = data.socketRoleMap.get(silencedSocket) ;
+				silencedRole.changeCanSpeakState() ;
+			}
+		}
+		data.resetVolatile() ;
 		data.dayCount ++ ;
+	}
+	public boolean endgame() {
+		// TODO : Complete Method
+		return false ;
 	}
 	public void sendCommand(Socket socket , String function , String... parameters) {
 		Command serverCommand = new Command() ;
