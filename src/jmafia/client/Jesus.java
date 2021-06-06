@@ -48,6 +48,8 @@ public class Jesus {
 			return responseSniperKillCommand(command) ;
 		} else if ( function.equals("REQUEST_SILENCED") ) {
 			return responseSilencedCommand(command) ;
+		} else if ( function.equals("REQUEST_TITAN_GUESS") ) {
+			return responseTitanGuessCommand(command) ;
 		} else {
 			return returnCommand(data.NULL_RESPONSE) ;
 		}
@@ -105,9 +107,14 @@ public class Jesus {
 		return returnCommand("RESPONSE_SNIPER_KILL" , targetUsername) ;
 	}
 	public String responseSilencedCommand(Command command) {
-		System.out.print("[The Holy One]: Username of Player You Want to Silence or \"PASS\" if You Dont Want to Kill Tonight ? ") ;
+		System.out.print("[The Holy One]: Username of Player You Want to Silence or \"PASS\" if You Dont Want to Silence Anyone Tonight ? ") ;
 		String targetUsername = scanner.nextLine() ;
 		return returnCommand("RESPONSE_SILENCED" , targetUsername) ;
+	}
+	public String responseTitanGuessCommand(Command command) {
+		System.out.print("[The Holy One]: Username of Player You Suspect or \"PASS\" if You Dont Suspect Anyone Tonight ? ") ;
+		String targetUsername = scanner.nextLine() ;
+		return returnCommand("RESPONSE_TITAN_GUESS" , targetUsername) ;
 	}
 	public String responseOpenChatroom(Command command) {
 		data.changeChatState() ;

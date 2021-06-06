@@ -10,7 +10,7 @@ public class Server {
 	// Fields
 	private static int port = 6969 ;
 	private static int userCount = 0 ;
-	private static final int maxCapacity = 6 ;
+	private static final int maxCapacity = 10 ;
 	private static God god = God.getInstance() ;
 	// Methods
 	public static void main(String[] args) {

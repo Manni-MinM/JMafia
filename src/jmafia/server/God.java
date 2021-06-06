@@ -67,6 +67,11 @@ public class God {
 		String msg = "Introduction Night Has Started !" ;
 		broadcastMessage(msg) ;
 
+		msg = "The Players Are => " ;
+		for ( String username : data.usernames.keySet() )
+			msg += username + " " ;
+		broadcastMessage(msg) ;
+
 		String introductionMsgMafia = "The Mafias Are => " ;
 		for ( Socket mafia : data.mafias )
 			introductionMsgMafia += data.clients.get(mafia) + " " ;
@@ -219,7 +224,29 @@ public class God {
 		// Role : The Titan
 		String theTitan = "The Titan" ;
 		if ( isAlive(theTitan) ) {
-			// TODO : Complete Code
+			askTitan(data.roleSocketMap.get(theTitan)) ;
+			while ( true ) {
+				if ( !data.titanGuessed.equals("NULL") )
+					break ;
+				try {
+					Thread.currentThread().sleep(50) ;
+				} catch ( InterruptedException exception ) {
+					exception.printStackTrace() ;
+				}
+			}
+			if ( data.titanGuessed.equals("PASS") ) {
+				// Do Nothing
+			} else {
+				Socket targetSocket = data.usernames.get(data.titanGuessed) ;
+				Role targetRole = data.socketRoleMap.get(targetSocket) ;
+				if ( targetRole.detectedMafia() ) {
+					sendMessage(data.roleSocketMap.get(theTitan) , "YES") ;
+					System.err.println("titan guessed : " + data.titanGuessed + " | guess : correct") ;
+				} else {
+					sendMessage(data.roleSocketMap.get(theTitan) , "NO") ;
+					System.err.println("titan guessed : " + data.titanGuessed + " | guess : wrong") ;
+				}
+			}
 			data.ready.add(theTitan) ;
 		}
 		// Role : The Mafia
@@ -330,6 +357,13 @@ public class God {
 			} else {
 				askPsychologist(data.roleSocketMap.get("The Psychologist")) ;
 			}
+		} else if ( clientCommand.getFunction().equals("RESPONSE_TITAN_GUESS") ) {
+			String targetUsername = parameters.get(0) ;
+			if ( isTitanValid(targetUsername) ) {
+				data.titanGuessed = targetUsername ;
+			} else {
+				askTitan(data.roleSocketMap.get("The Titan")) ;
+			}
 		} else {
 			// Do Nothing
 		}
@@ -421,6 +455,19 @@ public class God {
 		Socket targetSocket = data.usernames.get(targetUsername) ;
 		Role targetRole = data.socketRoleMap.get(targetSocket) ;
 		if ( targetRole.isAlive() ) {
+			return true ;
+		} else {
+			return false ;
+		}
+	}
+	public boolean isTitanValid(String targetUsername) {
+		if ( targetUsername.equals("PASS") )
+			return true ;
+		if ( !data.usernames.containsKey(targetUsername) )
+			return false ;
+		Socket targetSocket = data.usernames.get(targetUsername) ;
+		Role targetRole = data.socketRoleMap.get(targetSocket) ;
+		if ( !targetRole.isAlive() ) {
 			return true ;
 		} else {
 			return false ;
@@ -527,6 +574,9 @@ public class God {
 	}
 	public void askPsychologist(Socket socket) {
 		sendCommand(socket , "REQUEST_SILENCED") ;
+	}
+	public void askTitan(Socket socket) {
+		sendCommand(socket , "REQUEST_TITAN_GUESS") ;
 	}
 }
 
