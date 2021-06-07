@@ -42,7 +42,7 @@ public class Server {
 			while ( !god.endgame() ) {
 				god.runNight() ;
 				god.runDay() ;
-//				god.runVoting() ;
+				god.runVoting() ;
 				god.nextDay() ;
 			}
 			// End Game : Clean Up

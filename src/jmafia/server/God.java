@@ -381,8 +381,10 @@ public class God {
 				listDisconnect.add(client) ;
 			}
 		}
-		for ( Socket client : listDisconnect )
+		for ( Socket client : listDisconnect ) {
+			data.usernames.remove(data.clients.get(client)) ;
 			data.clients.remove(client) ;
+		}
 		// Display Final Message of the Night
 		msg = "Night " + data.dayCount + " Has Ended !" ;
 		broadcastMessage(msg) ;
@@ -419,6 +421,74 @@ public class God {
 		}
 		// Display Final Message of the Day
 		msg = "Day " + data.dayCount + " Has Ended !" ;
+		broadcastMessage(msg) ;
+	}
+	public void runVoting() {
+		String msg = "Voting " + data.dayCount + " Has Started !" ;
+		broadcastMessage(msg) ;
+
+		// TODO : Ask Mayor if he wants to cancel
+
+		for ( Socket client : data.clients.keySet() )
+			data.votes.put(data.clients.get(client) , 0) ;
+		data.ready = new ArrayList<String>() ;
+
+		for ( String username : data.usernames.keySet() ) {
+			askVote(data.usernames.get(username)) ;
+			while ( true ) {
+				if ( data.voteMap.containsKey(username) )
+					break ;
+				try {
+					Thread.currentThread().sleep(50) ;
+				} catch ( InterruptedException exception ) {
+					exception.printStackTrace() ;
+				}
+			}
+			data.ready.add(username) ;
+		}
+		// Check if Everyone has Done their Job
+		do {
+			try {
+				Thread.currentThread().sleep(100) ;
+			} catch ( InterruptedException exception ) {
+				exception.printStackTrace() ;
+			}
+		} while ( data.ready.size() < data.alive.size() ) ;
+		try {
+			Thread.currentThread().sleep(100) ;
+		} catch ( InterruptedException exception ) {
+			exception.printStackTrace() ;
+		}
+
+		broadcastMessage("Voting Results : ") ;
+		for ( String username : data.usernames.keySet() ) {
+			msg = username + " Voted For => " + data.voteMap.get(username) ;
+			broadcastMessage(msg) ;
+		}
+		// Find user with max votes
+		String maxVotesUsername = null ;
+		String secondMaxVotesUsername = null ;
+		System.err.println(data.votes) ;
+		for ( String username : data.usernames.keySet() )
+			if ( maxVotesUsername == null || data.votes.get(username) >= data.votes.get(maxVotesUsername) )
+				maxVotesUsername = username ;
+		for ( String username : data.usernames.keySet() )
+			if ( !username.equals(maxVotesUsername) )
+				if ( secondMaxVotesUsername == null || data.votes.get(username) >= data.votes.get(secondMaxVotesUsername) )
+					secondMaxVotesUsername = username ;
+		if ( data.votes.get(maxVotesUsername) == data.votes.get(secondMaxVotesUsername) ) {
+			msg = "Nobody Was Ejected !" ;
+			broadcastMessage(msg) ;
+		} else {
+			msg = maxVotesUsername + " (" + data.socketRoleMap.get(data.usernames.get(maxVotesUsername)).getName() + ") Was Ejected !" ;
+			broadcastMessage(msg) ;
+			Socket ejectedUserSocket = data.usernames.get(maxVotesUsername) ;
+			data.usernames.remove(maxVotesUsername) ;
+			data.clients.remove(ejectedUserSocket) ;
+			disconnect(ejectedUserSocket) ;
+		}
+
+		msg = "Voting " + data.dayCount + " Has Ended !" ;
 		broadcastMessage(msg) ;
 	}
 	public void nextDay() {
@@ -518,6 +588,15 @@ public class God {
 				data.titanGuessed = targetUsername ;
 			} else {
 				askTitan(data.roleSocketMap.get("The Titan")) ;
+			}
+		} else if ( clientCommand.getFunction().equals("RESPONSE_VOTE") ) {
+			String targetUsername = parameters.get(0) ;
+			if ( isVoteValid(targetUsername) ) {
+				int targetUserVotes = data.votes.get(targetUsername) ;
+				data.votes.put(targetUsername , targetUserVotes + 1) ;
+				data.voteMap.put(username , targetUsername) ;
+			} else {
+				askVote(data.usernames.get(username)) ;
 			}
 		} else {
 			// Do Nothing
@@ -626,6 +705,15 @@ public class God {
 			return true ;
 		} else {
 			return false ;
+		}
+	}
+	public boolean isVoteValid(String targetUsername) {
+		if ( targetUsername.equals("PASS") )
+			return true ;
+		if ( !data.usernames.containsKey(targetUsername) ) {
+			return false ;
+		} else {
+			return true ;
 		}
 	}
 	// Commands
@@ -737,6 +825,9 @@ public class God {
 		data.alive.remove(data.socketRoleMap.get(socket).getName()) ;
 		sendMessage(socket , "YOU DIED !") ;
 		sendCommand(socket , "REQUEST_DISCONNECT") ;
+	}
+	public void askVote(Socket socket) {
+		sendCommand(socket , "REQUEST_VOTE") ;
 	}
 }
 

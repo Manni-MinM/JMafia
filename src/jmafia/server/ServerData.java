@@ -42,11 +42,13 @@ public class ServerData {
 	public String titanGuessed;
 	public String detectiveGuessed ;
 	public ArrayList<String> ready ;
+	public HashMap<String , Integer> votes ;
+	public HashMap<String , String> voteMap ;
 	// Constructor
 	private ServerData() {
 		dayCount = 0 ;
-		mafiaChatTimer = /*(long)60000*/ (long)30000 ;
-		publicChatTimer = /*(long)300000*/ (long)30000 ;
+		mafiaChatTimer = /*(long)60000*/ (long)3000 ;
+		publicChatTimer = /*(long)300000*/ (long)3000 ;
 		mafiaChat = false ;
 		publicChat = false ;
 
@@ -74,6 +76,8 @@ public class ServerData {
 		titanGuessed = "NULL" ;
 		detectiveGuessed = "NULL" ;
 		ready = new ArrayList<String>() ;
+		votes = new HashMap<String , Integer>() ;
+		voteMap = new HashMap<String , String>() ;
 	}
 	// Methods
 	public static ServerData getInstance() {
@@ -90,6 +94,8 @@ public class ServerData {
 		titanGuessed = "NULL" ;
 		detectiveGuessed = "NULL" ;
 		ready = new ArrayList<String>() ;
+		votes = new HashMap<String , Integer>() ;
+		voteMap = new HashMap<String , String>() ;
 	}
 }
 

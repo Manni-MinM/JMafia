@@ -52,6 +52,8 @@ public class Jesus {
 			return responseTitanGuessCommand(command) ;
 		} else if ( function.equals("REQUEST_DISCONNECT") ) {
 			return responseDisconnectCommand(command) ;
+		} else if ( function.equals("REQUEST_VOTE") ) {
+			return responseVoteCommand(command) ;
 		} else {
 			return returnCommand(data.NULL_RESPONSE) ;
 		}
@@ -127,8 +129,12 @@ public class Jesus {
 		return returnCommand(data.NULL_RESPONSE) ;
 	}
 	public String responseDisconnectCommand(Command command) {
-		// TODO : Disconnect
 		return returnCommand(data.NULL_RESPONSE) ;
+	}
+	public String responseVoteCommand(Command command) {
+		System.out.print("[The Holy One]: Who Do You Wish to Eject ? ") ;
+		String targetUsername = scanner.nextLine() ;
+		return returnCommand("RESPONSE_VOTE" , targetUsername) ;
 	}
 }
 
