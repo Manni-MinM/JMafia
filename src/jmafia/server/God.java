@@ -35,23 +35,27 @@ public class God {
 		initRoles() ;
 	}
 	public void initRoles() {
-		data.roles.add("The Mafia") ;
+		data.roles.add("Doctor Lecter") ;
 		data.roles.add("The Civilian") ;
-		data.roles.add("The Mayor") ;
 		data.roles.add("The Titan") ;
-		data.roles.add("The Psychologist") ;
-		data.roles.add("The Sniper") ;
 		data.roles.add("The Detective") ;
 		data.roles.add("The GodFather") ;
-		data.roles.add("Doctor Lecter") ;
+		data.roles.add("The Mayor") ;
+		data.roles.add("The Sniper") ;
+		data.roles.add("The Psychologist") ;
+		data.roles.add("The Mafia") ;
 		data.roles.add("The Doctor") ;
-		// TODO : Uncomment below
-		//		for ( int it = 0 ; it < 10 ; it ++ )
-		//			Collections.shuffle(data.roles) ;
+		for ( int it = 0 ; it < 10 ; it ++ )
+			Collections.shuffle(data.roles) ;
 	}
 	public void runFirstNight() {
-		data.phase = "NIGHT" ;
-
+		// Greet User
+		for ( Socket client : data.clients.keySet() )
+			god.sendWelcomeMessage(client) ;
+		// Send Role to User
+		for ( Socket client : data.clients.keySet() )
+			god.sendRole(client) ;
+		// Init Lists
 		for ( String roleName : data.roleSocketMap.keySet() ) {
 			if ( roleName.equals("The GodFather") ) {
 				data.mafias.add(data.roleSocketMap.get(roleName)) ;
@@ -79,8 +83,6 @@ public class God {
 		broadcastMessage(msg) ;
 	}
 	public void runFirstDay() {
-		data.phase = "DAY" ;
-
 		String msg = "Introduction Day Has Started !" ;
 		broadcastMessage(msg) ;
 		// Show All Players
@@ -104,8 +106,6 @@ public class God {
 		broadcastMessage(msg) ;
 	}
 	public void runNight() {
-		data.phase = "NIGHT" ;
-
 		String introductionMsgMafia = "Mafias => " ;
 		for ( Socket mafia : data.mafias )
 			introductionMsgMafia += data.clients.get(mafia) + " " ;
@@ -398,8 +398,6 @@ public class God {
 		broadcastMessage(msg) ;
 	}
 	public void runDay() {
-		data.phase = "DAY" ;
-		
 		String msg = "Day " + data.dayCount + " Has Started !" ;
 		broadcastMessage(msg) ;
 		// Show Alive Players 
@@ -434,9 +432,7 @@ public class God {
 	public void runVoting() {
 		String msg = "Voting " + data.dayCount + " Has Started !" ;
 		broadcastMessage(msg) ;
-
-		// TODO : Ask Mayor if he wants to cancel
-
+		// Ask for Votes
 		for ( Socket client : data.clients.keySet() )
 			data.votes.put(data.clients.get(client) , 0) ;
 		data.ready = new ArrayList<String>() ;
@@ -473,27 +469,49 @@ public class God {
 			msg = username + " Voted For => " + data.voteMap.get(username) ;
 			broadcastMessage(msg) ;
 		}
-		// Find user with max votes
-		String maxVotesUsername = null ;
-		String secondMaxVotesUsername = null ;
-		System.err.println(data.votes) ;
-		for ( String username : data.usernames.keySet() )
-			if ( maxVotesUsername == null || data.votes.get(username) >= data.votes.get(maxVotesUsername) )
-				maxVotesUsername = username ;
-		for ( String username : data.usernames.keySet() )
-			if ( !username.equals(maxVotesUsername) )
-				if ( secondMaxVotesUsername == null || data.votes.get(username) >= data.votes.get(secondMaxVotesUsername) )
-					secondMaxVotesUsername = username ;
-		if ( data.votes.get(maxVotesUsername) == data.votes.get(secondMaxVotesUsername) ) {
+		// Ask Mayor if he wants to cancel
+		String theMayor = "The Mayor" ;
+		if ( isAlive(theMayor) && !data.mayorUsedAbility ) {
+			askMayor(data.roleSocketMap.get(theMayor)) ;
+			while ( true ) {
+				if ( !data.mayorDecision.equals("NULL") )
+					break ;
+				try {
+					Thread.currentThread().sleep(50) ;
+				} catch ( InterruptedException exception ) {
+					exception.printStackTrace() ;
+				}
+			}
+		}
+		if ( data.mayorDecision.equals("YES") ) {
+			data.mayorUsedAbility = true ;
+			msg = data.clients.get(data.roleSocketMap.get(theMayor)) + " (The Mayor) Canceled The Voting !" ;
+			broadcastMessage(msg) ;
 			msg = "Nobody Was Ejected !" ;
 			broadcastMessage(msg) ;
 		} else {
-			msg = maxVotesUsername + " (" + data.socketRoleMap.get(data.usernames.get(maxVotesUsername)).getName() + ") Was Ejected !" ;
-			broadcastMessage(msg) ;
-			Socket ejectedUserSocket = data.usernames.get(maxVotesUsername) ;
-			data.usernames.remove(maxVotesUsername) ;
-			data.clients.remove(ejectedUserSocket) ;
-			disconnect(ejectedUserSocket) ;
+			// Find user with max votes
+			String maxVotesUsername = null ;
+			String secondMaxVotesUsername = null ;
+			System.err.println(data.votes) ;
+			for ( String username : data.usernames.keySet() )
+				if ( maxVotesUsername == null || data.votes.get(username) >= data.votes.get(maxVotesUsername) )
+					maxVotesUsername = username ;
+			for ( String username : data.usernames.keySet() )
+				if ( !username.equals(maxVotesUsername) )
+					if ( secondMaxVotesUsername == null || data.votes.get(username) >= data.votes.get(secondMaxVotesUsername) )
+						secondMaxVotesUsername = username ;
+			if ( data.votes.get(maxVotesUsername) == data.votes.get(secondMaxVotesUsername) ) {
+				msg = "Nobody Was Ejected !" ;
+				broadcastMessage(msg) ;
+			} else {
+				msg = maxVotesUsername + " (" + data.socketRoleMap.get(data.usernames.get(maxVotesUsername)).getName() + ") Was Ejected !" ;
+				broadcastMessage(msg) ;
+				Socket ejectedUserSocket = data.usernames.get(maxVotesUsername) ;
+				data.usernames.remove(maxVotesUsername) ;
+				data.clients.remove(ejectedUserSocket) ;
+				disconnect(ejectedUserSocket) ;
+			}
 		}
 
 		msg = "Voting " + data.dayCount + " Has Ended !" ;
@@ -620,6 +638,13 @@ public class God {
 			} else {
 				askTitan(data.roleSocketMap.get("The Titan")) ;
 			}
+		} else if ( clientCommand.getFunction().equals("RESPONSE_MAYOR_DECISION") ) {
+			String decision = parameters.get(0) ;
+			if ( isMayorValid(decision) ) {
+				data.mayorDecision = decision ;
+			} else {
+				askMayor(data.roleSocketMap.get("The Mayor")) ;
+			}
 		} else if ( clientCommand.getFunction().equals("RESPONSE_VOTE") ) {
 			String targetUsername = parameters.get(0) ;
 			if ( isVoteValid(targetUsername) ) {
@@ -737,6 +762,9 @@ public class God {
 			return false ;
 		}
 	}
+	public boolean isMayorValid(String decision) {
+		return (decision.equals("YES") || decision.equals("NO")) ;
+	}
 	public boolean isVoteValid(String targetUsername) {
 		if ( !data.usernames.containsKey(targetUsername) ) {
 			return false ;
@@ -849,6 +877,12 @@ public class God {
 	public void askTitan(Socket socket) {
 		sendCommand(socket , "REQUEST_TITAN_GUESS") ;
 	}
+	public void askMayor(Socket socket) {
+		sendCommand(socket , "REQUEST_MAYOR_DECISION") ;
+	}
+	public void askVote(Socket socket) {
+		sendCommand(socket , "REQUEST_VOTE") ;
+	}
 	public void disconnect(Socket socket) {
 		data.alive.remove(data.socketRoleMap.get(socket).getName()) ;
 		if ( data.mafias.contains(socket) )
@@ -858,8 +892,6 @@ public class God {
 		sendMessage(socket , "YOU DIED !") ;
 		sendCommand(socket , "REQUEST_DISCONNECT") ;
 	}
-	public void askVote(Socket socket) {
-		sendCommand(socket , "REQUEST_VOTE") ;
-	}
+	
 }
 

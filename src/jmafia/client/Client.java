@@ -9,13 +9,14 @@ import java.util.concurrent.* ;
 
 public class Client {
 	// Fields
-	private static int port ;
+	private static int port = 6969 ;
 	// Methods
 	public static void main(String[] args) {
 		// Ask Port
 		Scanner scanner = new Scanner(System.in) ;
-		System.out.print("Port ? ") ;
-		port = scanner.nextInt() ;
+		// TODO : Uncomment Below
+//		System.out.print("Port ? ") ;
+//		port = scanner.nextInt() ;
 		// Run the Client
 		try {
 			Socket socket = new Socket("127.0.0.1" , port) ;

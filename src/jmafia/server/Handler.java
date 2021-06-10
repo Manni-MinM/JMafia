@@ -31,15 +31,7 @@ public class Handler implements Runnable {
 				clientResponse = reader.readLine() ;
 				god.process(socket , clientResponse) ;
 			}
-			// Greet User
-			god.sendWelcomeMessage(socket) ;
-			clientResponse = reader.readLine() ;
-			god.process(socket , clientResponse) ;
-			// Send Role to User
-			god.sendRole(socket) ;
-			clientResponse = reader.readLine() ;
-			god.process(socket , clientResponse) ;
-			
+			// Run Handler
 			while ( true ) {
 				clientResponse = reader.readLine() ;
 				if ( isCommandMsg(clientResponse) ) {

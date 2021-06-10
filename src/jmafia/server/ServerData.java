@@ -23,7 +23,6 @@ public class ServerData {
 	public boolean mayorUsedAbility ;
 	public boolean sniperKilledCivilian ;
 
-	public String phase ;
 	public String NULL_RESPONSE ;
 	public ArrayList<String> alive ;
 	public ArrayList<String> roles ;
@@ -40,6 +39,7 @@ public class ServerData {
 	public String silenced ;
 	public String savedMafia ;
 	public String savedCivilian ;
+	public String mayorDecision ;
 	public String titanGuessed;
 	public String detectiveGuessed ;
 	public ArrayList<String> ready ;
@@ -58,7 +58,6 @@ public class ServerData {
 		mayorUsedAbility = false ;
 		sniperKilledCivilian = false ;
 
-		phase = "NIGHT" ;
 		NULL_RESPONSE = "NULL_RESPONSE" ;
 		alive = new ArrayList<String>() ;
 		roles = new ArrayList<String>() ;
@@ -75,6 +74,7 @@ public class ServerData {
 		silenced = "NULL" ;
 		savedMafia = "NULL" ;
 		savedCivilian = "NULL" ;
+		mayorDecision = "NULL" ;
 		titanGuessed = "NULL" ;
 		detectiveGuessed = "NULL" ;
 		ready = new ArrayList<String>() ;
@@ -93,6 +93,7 @@ public class ServerData {
 		silenced = "NULL" ;
 		savedMafia = "NULL" ;
 		savedCivilian = "NULL" ;
+		mayorDecision = "NULL" ;
 		titanGuessed = "NULL" ;
 		detectiveGuessed = "NULL" ;
 		ready = new ArrayList<String>() ;

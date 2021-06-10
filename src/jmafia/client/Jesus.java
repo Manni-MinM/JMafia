@@ -50,6 +50,8 @@ public class Jesus {
 			return responseSilencedCommand(command) ;
 		} else if ( function.equals("REQUEST_TITAN_GUESS") ) {
 			return responseTitanGuessCommand(command) ;
+		} else if ( function.equals("REQUEST_MAYOR_DECISION") ) {
+			return responseMayorDecisionCommand(command) ;
 		} else if ( function.equals("REQUEST_DISCONNECT") ) {
 			return responseDisconnectCommand(command) ;
 		} else if ( function.equals("REQUEST_VOTE") ) {
@@ -119,6 +121,11 @@ public class Jesus {
 		System.out.print("[The Holy One]: Username of Player You Suspect or \"PASS\" if You Dont Suspect Anyone Tonight ? ") ;
 		String targetUsername = scanner.nextLine() ;
 		return returnCommand("RESPONSE_TITAN_GUESS" , targetUsername) ;
+	}
+	public String responseMayorDecisionCommand(Command command) {
+		System.out.print("[The Holy One]: Do You Wish to Cancel The Voting \"YES\" or \"NO\" (You Can Only Do This Once) ? ") ;
+		String decision = scanner.nextLine() ;
+		return returnCommand("RESPONSE_MAYOR_DECISION" , decision) ;
 	}
 	public String responseOpenChatroom(Command command) {
 		data.changeChatState() ;

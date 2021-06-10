@@ -8,7 +8,7 @@ import java.util.* ;
 
 public class Server {
 	// Fields
-	private static int port ;
+	private static int port = 6969 ;
 	private static int userCount = 0 ;
 	private static final int maxCapacity = 10 ;
 	private static God god = God.getInstance() ;
@@ -16,8 +16,9 @@ public class Server {
 	public static void main(String[] args) {
 		// Ask Port
 		Scanner scanner = new Scanner(System.in) ;
-		System.out.print("Port ? ") ;
-		port = scanner.nextInt() ;
+		// TODO : Uncomment Below
+//		System.out.print("Port ? ") ;
+//		port = scanner.nextInt() ;
 		// Run the Server
 		try ( ServerSocket serverSocket = new ServerSocket(port) ) {
 			System.out.println("[SERVER STARTED] : Listening on Port " + port) ;
