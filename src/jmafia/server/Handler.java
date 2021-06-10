@@ -27,8 +27,10 @@ public class Handler implements Runnable {
 
 			// Request Username
 			god.requestUsername(socket) ;
-			clientResponse = reader.readLine() ;
-			god.process(socket , clientResponse) ;
+			while ( !god.data.clients.containsKey(socket) ) {
+				clientResponse = reader.readLine() ;
+				god.process(socket , clientResponse) ;
+			}
 			// Greet User
 			god.sendWelcomeMessage(socket) ;
 			clientResponse = reader.readLine() ;

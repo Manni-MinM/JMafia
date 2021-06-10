@@ -563,9 +563,14 @@ public class God {
 		if ( clientCommand.getFunction().equals("NULL_RESPONSE") ) {
 			// Pass
 		} else if ( clientCommand.getFunction().equals("RESPONSE_USERNAME") ) {
-			data.clients.put(socket , username) ;
-			data.usernames.put(username , socket) ;
-			data.allUsernames.put(username , socket) ;
+			String targetUsername = parameters.get(0) ;
+			if ( isUserValid(targetUsername) ) {
+				data.clients.put(socket , username) ;
+				data.usernames.put(username , socket) ;
+				data.allUsernames.put(username , socket) ;
+			} else {
+				requestUsername(socket) ;
+			}
 		} else if ( clientCommand.getFunction().equals("RESPONSE_KILL") ) {
 			String targetUsername = parameters.get(0) ;
 			if ( isGodFatherValid(targetUsername) ) {
@@ -630,6 +635,9 @@ public class God {
 	}
 	// Role Methods
 	// TODO : Add Role Methods Here
+	public boolean isUserValid(String targetUsername) {
+		return !data.allUsernames.containsKey(targetUsername) ;
+	}
 	public boolean isAlive(String roleName) {
 		String targetUsername = data.clients.get(data.roleSocketMap.get(roleName)) ;
 		return data.usernames.containsKey(targetUsername) ;
