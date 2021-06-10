@@ -69,9 +69,11 @@ public class God {
 
 		String introductionMsgMafia = "Mafias => " ;
 		for ( Socket mafia : data.mafias )
-			introductionMsgMafia += data.clients.get(mafia) + " " ;
+			if ( data.clients.containsKey(mafia) && !data.clients.get(mafia).equals(null) )
+				introductionMsgMafia += data.clients.get(mafia) + " " ;
 		for ( Socket mafia : data.mafias )
-			sendMessage(mafia , introductionMsgMafia) ;
+			if ( data.clients.containsKey(mafia) && !data.clients.get(mafia).equals(null) )
+				sendMessage(mafia , introductionMsgMafia) ;
 
 		msg = "Introduction Night Has Ended !" ;
 		broadcastMessage(msg) ;
@@ -103,6 +105,12 @@ public class God {
 	}
 	public void runNight() {
 		data.phase = "NIGHT" ;
+
+		String introductionMsgMafia = "Mafias => " ;
+		for ( Socket mafia : data.mafias )
+			introductionMsgMafia += data.clients.get(mafia) + " " ;
+		for ( Socket mafia : data.mafias )
+			sendMessage(mafia , introductionMsgMafia) ;
 
 		String msg = "Night " + data.dayCount + " Has Started" ;
 		broadcastMessage(msg) ;
@@ -230,7 +238,7 @@ public class God {
 			if ( data.titanGuessed.equals("PASS") ) {
 				// Do Nothing
 			} else {
-				Socket targetSocket = data.usernames.get(data.titanGuessed) ;
+				Socket targetSocket = data.allUsernames.get(data.titanGuessed) ;
 				Role targetRole = data.socketRoleMap.get(targetSocket) ;
 				if ( targetRole.detectedMafia() ) {
 					sendMessage(data.roleSocketMap.get(theTitan) , "YES") ;
@@ -342,7 +350,7 @@ public class God {
 		Socket titanGuessedSocket = null ;
 		Role titanGuessedRole = null ;
 		if ( !(titanGuessed.equals("NULL") || titanGuessed.equals("PASS")) ) {
-			titanGuessedSocket = data.usernames.get(titanGuessed) ;
+			titanGuessedSocket = data.allUsernames.get(titanGuessed) ;
 			titanGuessedRole = data.socketRoleMap.get(titanGuessedSocket) ;
 			if ( DEBUG )
 				System.out.println("GAME DETAILS => Guessed By Titan : " + titanGuessed + " | Role : " + titanGuessedRole.getName()) ;
@@ -493,7 +501,7 @@ public class God {
 	}
 	public void nextDay() {
 		if ( !(data.silenced == null || data.silenced.equals("NULL")) ) {
-			Socket silencedSocket = data.usernames.get(data.silenced) ;
+			Socket silencedSocket = data.allUsernames.get(data.silenced) ;
 			if ( data.clients.containsKey(silencedSocket) ) {
 				Role silencedRole = data.socketRoleMap.get(silencedSocket) ;
 				silencedRole.changeCanSpeakState() ;
@@ -540,6 +548,7 @@ public class God {
 		} else if ( clientCommand.getFunction().equals("RESPONSE_USERNAME") ) {
 			data.clients.put(socket , username) ;
 			data.usernames.put(username , socket) ;
+			data.allUsernames.put(username , socket) ;
 		} else if ( clientCommand.getFunction().equals("RESPONSE_KILL") ) {
 			String targetUsername = parameters.get(0) ;
 			if ( isGodFatherValid(targetUsername) ) {
@@ -697,19 +706,13 @@ public class God {
 	public boolean isTitanValid(String targetUsername) {
 		if ( targetUsername.equals("PASS") )
 			return true ;
-		if ( !data.usernames.containsKey(targetUsername) )
-			return false ;
-		Socket targetSocket = data.usernames.get(targetUsername) ;
-		Role targetRole = data.socketRoleMap.get(targetSocket) ;
-		if ( !targetRole.isAlive() ) {
+		if ( data.allUsernames.containsKey(targetUsername) && !data.usernames.containsKey(targetUsername) ) {
 			return true ;
 		} else {
 			return false ;
 		}
 	}
 	public boolean isVoteValid(String targetUsername) {
-		if ( targetUsername.equals("PASS") )
-			return true ;
 		if ( !data.usernames.containsKey(targetUsername) ) {
 			return false ;
 		} else {

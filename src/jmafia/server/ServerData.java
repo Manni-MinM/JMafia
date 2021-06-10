@@ -33,6 +33,7 @@ public class ServerData {
 	public HashMap<String , Socket> roleSocketMap ;
 	public HashMap<Socket , String> clients ;
 	public HashMap<String , Socket> usernames ;
+	public HashMap<String , Socket> allUsernames ;
 	// Volatile Fields
 	public String killed ;
 	public String sniped ;
@@ -67,6 +68,7 @@ public class ServerData {
 		roleSocketMap = new HashMap<String , Socket>() ;
 		clients = new HashMap<Socket , String>() ;
 		usernames = new HashMap<String , Socket>() ;
+		allUsernames = new HashMap<String , Socket>() ;
 
 		killed = "NULL" ;
 		sniped = "NULL" ;
