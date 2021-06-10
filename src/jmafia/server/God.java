@@ -69,10 +69,10 @@ public class God {
 
 		String introductionMsgMafia = "Mafias => " ;
 		for ( Socket mafia : data.mafias )
-			if ( data.clients.containsKey(mafia) && !data.clients.get(mafia).equals(null) )
+			if ( data.clients.containsKey(mafia) && data.clients.get(mafia) != null )
 				introductionMsgMafia += data.clients.get(mafia) + " " ;
 		for ( Socket mafia : data.mafias )
-			if ( data.clients.containsKey(mafia) && !data.clients.get(mafia).equals(null) )
+			if ( data.clients.containsKey(mafia) && data.clients.get(mafia) != null )
 				sendMessage(mafia , introductionMsgMafia) ;
 
 		msg = "Introduction Night Has Ended !" ;
@@ -510,8 +510,25 @@ public class God {
 		data.resetVolatile() ;
 		data.dayCount ++ ;
 	}
-	public boolean endgame() {
+	public void mafiaWin() {
 		// TODO : Complete Method
+		broadcastMessage("Game Finished => The Mafias Won") ;
+		System.out.println("Game Finished => The Mafias Won") ;
+	}
+	public void civilianWin() {
+		// TODO : Complete Method
+		broadcastMessage("Game Finished => The Civilians Won") ;
+		System.out.println("Game Finished => The Civilians Won") ;
+	}
+	public boolean endgame() {
+		Socket godFatherSocket = data.roleSocketMap.get("The GodFather") ;
+		if ( !(data.clients.containsKey(godFatherSocket) && data.clients.get(godFatherSocket) != null) ) {
+			civilianWin() ;
+			return true ;
+		} else if ( data.mafias.size() >= data.civilians.size() ) {
+			mafiaWin() ;
+			return true ;
+		}
 		return false ;
 	}
 	public void sendCommand(Socket socket , String function , String... parameters) {
@@ -826,6 +843,10 @@ public class God {
 	}
 	public void disconnect(Socket socket) {
 		data.alive.remove(data.socketRoleMap.get(socket).getName()) ;
+		if ( data.mafias.contains(socket) )
+			data.mafias.remove(socket) ;
+		else
+			data.civilians.remove(socket) ;
 		sendMessage(socket , "YOU DIED !") ;
 		sendCommand(socket , "REQUEST_DISCONNECT") ;
 	}
