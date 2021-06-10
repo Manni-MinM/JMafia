@@ -71,13 +71,20 @@ public class God {
 		String msg = "Introduction Night Has Started !" ;
 		broadcastMessage(msg) ;
 
-		String introductionMsgMafia = "Mafias => " ;
+		String introductionMsgMafia = "The Mafias => " ;
 		for ( Socket mafia : data.mafias )
 			if ( data.clients.containsKey(mafia) && data.clients.get(mafia) != null )
 				introductionMsgMafia += data.clients.get(mafia) + " " ;
 		for ( Socket mafia : data.mafias )
 			if ( data.clients.containsKey(mafia) && data.clients.get(mafia) != null )
 				sendMessage(mafia , introductionMsgMafia) ;
+
+		if ( data.roleSocketMap.containsKey("The Doctor") && data.roleSocketMap.containsKey("The Mayor") ) {
+			String introductionMsgDoctor = "The Doctor => " + data.clients.get(data.roleSocketMap.get("The Doctor")) ;
+			sendMessage(data.roleSocketMap.get("The Mayor") , introductionMsgDoctor) ;
+			String introductionMsgMayor = "The Mayor => " + data.clients.get(data.roleSocketMap.get("The Mayor")) ;
+			sendMessage(data.roleSocketMap.get("The Doctor") , introductionMsgMayor) ;
+		}
 
 		msg = "Introduction Night Has Ended !" ;
 		broadcastMessage(msg) ;
