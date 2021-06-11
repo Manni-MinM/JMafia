@@ -167,7 +167,7 @@ public class Jesus {
 	public String responseVoteCommand(Command command) {
 		String targetUsername = "" ;
 		while ( targetUsername.equals("") ) {
-			System.out.print("[The Holy One]: Who Do You Wish to Eject ? ") ;
+			System.out.print("[The Holy One]: Who Do You Wish to Eject (\"PASS\" if You Do Not Wish to Vote) ? ") ;
 			targetUsername = scanner.nextLine() ;
 		}
 		return returnCommand("RESPONSE_VOTE" , targetUsername) ;

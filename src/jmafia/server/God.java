@@ -448,6 +448,7 @@ public class God {
 		String msg = "Voting " + data.dayCount + " Has Started !" ;
 		broadcastMessage(msg) ;
 		// Ask for Votes
+		data.votes.put("PASS" , 0) ;
 		for ( Socket client : data.clients.keySet() )
 			data.votes.put(data.clients.get(client) , 0) ;
 		data.ready = new ArrayList<String>() ;
@@ -506,17 +507,19 @@ public class God {
 			broadcastMessage(msg) ;
 		} else {
 			// Find user with max votes
-			String maxVotesUsername = null ;
-			String secondMaxVotesUsername = null ;
-			System.err.println(data.votes) ;
+			String maxVotesUsername = "PASS" ;
+			String secondMaxVotesUsername = "PASS" ;
 			for ( String username : data.usernames.keySet() )
-				if ( maxVotesUsername == null || data.votes.get(username) >= data.votes.get(maxVotesUsername) )
+				if ( data.votes.get(username) > data.votes.get(maxVotesUsername) )
 					maxVotesUsername = username ;
 			for ( String username : data.usernames.keySet() )
 				if ( !username.equals(maxVotesUsername) )
-					if ( secondMaxVotesUsername == null || data.votes.get(username) >= data.votes.get(secondMaxVotesUsername) )
+					if ( data.votes.get(username) > data.votes.get(secondMaxVotesUsername) )
 						secondMaxVotesUsername = username ;
-			if ( data.votes.get(maxVotesUsername) == data.votes.get(secondMaxVotesUsername) ) {
+			if ( maxVotesUsername.equals("PASS") ) {
+				msg = "Nobody Was Ejected !" ;
+				broadcastMessage(msg) ;
+			} else if ( data.votes.get(maxVotesUsername) == data.votes.get(secondMaxVotesUsername) ) {
 				msg = "Nobody Was Ejected !" ;
 				broadcastMessage(msg) ;
 			} else {
@@ -781,6 +784,8 @@ public class God {
 		return (decision.equals("YES") || decision.equals("NO")) ;
 	}
 	public boolean isVoteValid(String targetUsername) {
+		if ( targetUsername.equals("PASS") )
+			return true ;
 		if ( !data.usernames.containsKey(targetUsername) ) {
 			return false ;
 		} else {
