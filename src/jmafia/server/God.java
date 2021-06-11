@@ -25,27 +25,35 @@ public class God {
 	}
 	// Methods
 	public static God getInstance() {
-		if ( god == null ) {
+		if ( god == null )
 			god = new God() ;
-			god.init() ;
-		}
 		return god ;
 	}
 	public void init() {
 		initRoles() ;
 	}
 	public void initRoles() {
-		data.roles.add("Doctor Lecter") ;
-		data.roles.add("The Civilian") ;
-		data.roles.add("The Titan") ;
-		data.roles.add("The Detective") ;
-		data.roles.add("The GodFather") ;
-		data.roles.add("The Mayor") ;
-		data.roles.add("The Sniper") ;
-		data.roles.add("The Psychologist") ;
-		data.roles.add("The Mafia") ;
-		data.roles.add("The Doctor") ;
-		for ( int it = 0 ; it < 10 ; it ++ )
+		if ( data.playerCount >= 6 ) {
+			data.roles.add("The GodFather") ;
+			data.roles.add("The Mafia") ;
+			data.roles.add("The Doctor") ;
+			data.roles.add("The Detective") ;
+			data.roles.add("The Psychologist") ;
+			data.roles.add("The Civilian") ;
+		}
+		if ( data.playerCount >= 7 ) {
+			data.roles.add("The Titan") ;
+		}
+		if ( data.playerCount >= 8 ) {
+			data.roles.add("Doctor Lecter") ;
+		}
+		if ( data.playerCount >= 9 ) {
+			data.roles.add("The Sniper") ;
+		}
+		if ( data.playerCount >= 10 ) {
+			data.roles.add("The Mayor") ;	
+		}
+		for ( int it = 0 ; it < data.roles.size() ; it ++ )
 			Collections.shuffle(data.roles) ;
 	}
 	public void runFirstNight() {

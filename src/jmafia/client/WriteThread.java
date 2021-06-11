@@ -22,7 +22,7 @@ public class WriteThread implements Runnable {
 	// Methods
 	@Override
 	public void run() {
-		Scanner scanner = new Scanner(System.in) ;
+		Console console = System.console() ;
 
 		String msg = "" ;
 		boolean polled = false ;
@@ -52,13 +52,14 @@ public class WriteThread implements Runnable {
 					exception.printStackTrace() ;
 				}
 				if ( availableBytes > 0 ) {
-					msg = scanner.nextLine() ;
+					msg = console.readLine() ;
 					sendMessage(msg) ;
 					if ( DEBUG )
 						System.out.println("SENT MSG : " + msg) ;
 				}
 			}
 			polled = false ;
+			console.flush() ;
 		} while ( true ) ;
 	} 
 	public void sendCommand(String command) {

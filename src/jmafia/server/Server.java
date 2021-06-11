@@ -10,19 +10,26 @@ public class Server {
 	// Fields
 	private static int port = 6969 ;
 	private static int userCount = 0 ;
-	private static final int maxCapacity = 10 ;
+	private static int playerCapacity ;
 	private static God god = God.getInstance() ;
 	// Methods
 	public static void main(String[] args) {
-		// Ask Port
 		Scanner scanner = new Scanner(System.in) ;
+		// Ask Port
 		// TODO : Uncomment Below
-//		System.out.print("Port ? ") ;
+//		System.out.print("[PORT] : ") ;
 //		port = scanner.nextInt() ;
+		// Ask Player Count
+		while ( playerCapacity > 10 || playerCapacity < 6 ) {
+			System.out.print("[PLAYER COUNT] : ") ;
+			playerCapacity = scanner.nextInt() ;
+			god.data.playerCount = playerCapacity ;
+		}
 		// Run the Server
+		god.init() ;
 		try ( ServerSocket serverSocket = new ServerSocket(port) ) {
 			System.out.println("[SERVER STARTED] : Listening on Port " + port) ;
-			while ( userCount < maxCapacity ) {
+			while ( userCount < playerCapacity ) {
 				Socket socket = serverSocket.accept() ;
 				Thread handler = new Thread(new Handler(socket)) ;
 				handler.start() ;
@@ -34,7 +41,7 @@ public class Server {
 				} catch ( InterruptedException exception ) {
 					exception.printStackTrace() ;
 				}
-			} while ( god.data.clients.keySet().size() < maxCapacity ) ;
+			} while ( god.data.clients.keySet().size() < playerCapacity ) ;
 			try {
 				Thread.currentThread().sleep(100) ;
 			} catch ( InterruptedException exception ) {

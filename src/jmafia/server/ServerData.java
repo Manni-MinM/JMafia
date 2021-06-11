@@ -13,6 +13,7 @@ public class ServerData {
 	private static ServerData data ;
 	// Public Fields
 	public int dayCount ;
+	public int playerCount ;
 	public long mafiaChatTimer ;
 	public long publicChatTimer ;
 	public boolean mafiaChat ;
@@ -48,8 +49,9 @@ public class ServerData {
 	// Constructor
 	private ServerData() {
 		dayCount = 0 ;
-		mafiaChatTimer = /*(long)60000*/ (long)3000 ;
-		publicChatTimer = /*(long)300000*/ (long)3000 ;
+		playerCount = 0 ;
+		mafiaChatTimer = /*(long)60000*/ (long)30000 ;
+		publicChatTimer = /*(long)300000*/ (long)30000 ;
 		mafiaChat = false ;
 		publicChat = false ;
 
