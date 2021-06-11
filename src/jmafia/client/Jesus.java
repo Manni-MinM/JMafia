@@ -69,7 +69,6 @@ public class Jesus {
 		return serverCommand.toString() ;
 	}
 	// Commands
-	// TODO : Add More Commands
 	public String showMessageCommand(Command command) {
 		String msg = "[" + command.getUsername() + "]: " + command.getParameters().get(0) ;
 		System.out.println(msg) ;
@@ -92,7 +91,7 @@ public class Jesus {
 	public String responseKillCommand(Command command) {
 		String targetUsername = "" ;
 		while ( targetUsername.equals("") ) {
-			System.out.print("[The Holy One]: Username of Player You Want to Kill ? ") ;
+			System.out.print("[The Holy One]: " + "\u001B[33m" + "Username of Player You Want to Kill ? " + "\u001B[0m") ;
 			targetUsername = scanner.nextLine() ;
 		}
 		return returnCommand("RESPONSE_KILL" , targetUsername) ;
@@ -100,7 +99,7 @@ public class Jesus {
 	public String responseMafiaHealCommand(Command command) {
 		String targetUsername = "" ;
 		while ( targetUsername.equals("") ) {
-			System.out.print("[The Holy One]: Username of Mafia You Want to Heal ? ") ;
+			System.out.print("[The Holy One]: " + "\u001B[33m" + "Username of Mafia You Want to Heal ? " + "\u001B[0m") ;
 			targetUsername = scanner.nextLine() ;
 		}
 		return returnCommand("RESPONSE_MAFIA_HEAL" , targetUsername) ;
@@ -108,7 +107,7 @@ public class Jesus {
 	public String responseCivilianHealCommand(Command command) {
 		String targetUsername = "" ;
 		while ( targetUsername.equals("") ) {
-			System.out.print("[The Holy One]: Username of Civilian You Want to Heal ? ") ;
+			System.out.print("[The Holy One]: " + "\u001B[33m" + "Username of Civilian You Want to Heal ? " + "\u001B[0m") ;
 			targetUsername = scanner.nextLine() ;
 		}
 		return returnCommand("RESPONSE_CIVILIAN_HEAL" , targetUsername) ;
@@ -116,7 +115,7 @@ public class Jesus {
 	public String responseDetectiveGuessCommand(Command command) {
 		String targetUsername = "" ;
 		while ( targetUsername.equals("") ) {
-			System.out.print("[The Holy One]: Username of Player You Suspect ? ") ;
+			System.out.print("[The Holy One]: " + "\u001B[33m" + "Username of Player You Suspect ? " + "\u001B[0m") ;
 			targetUsername = scanner.nextLine() ;
 		}
 		return returnCommand("RESPONSE_DETECTIVE_GUESS" , targetUsername) ;
@@ -124,7 +123,7 @@ public class Jesus {
 	public String responseSniperKillCommand(Command command) {
 		String targetUsername = "" ;
 		while ( targetUsername.equals("") ) {
-			System.out.print("[The Holy One]: Username of Player You Want to Kill or \"PASS\" if You Dont Want to Kill Tonight ? ") ;
+			System.out.print("[The Holy One]: " + "\u001B[33m" + "Username of Player You Want to Kill or \"PASS\" if You Dont Want to Kill Tonight ? " + "\u001B[0m") ;
 			targetUsername = scanner.nextLine() ;
 		}
 		return returnCommand("RESPONSE_SNIPER_KILL" , targetUsername) ;
@@ -132,7 +131,7 @@ public class Jesus {
 	public String responseSilencedCommand(Command command) {
 		String targetUsername = "" ;
 		while ( targetUsername.equals("") ) {
-			System.out.print("[The Holy One]: Username of Player You Want to Silence or \"PASS\" if You Dont Want to Silence Anyone Tonight ? ") ;
+			System.out.print("[The Holy One]: " + "\u001B[33m" + "Username of Player You Want to Silence or \"PASS\" if You Dont Want to Silence Anyone Tonight ? " + "\u001B[0m") ;
 			targetUsername = scanner.nextLine() ;
 		}
 		return returnCommand("RESPONSE_SILENCED" , targetUsername) ;
@@ -140,7 +139,7 @@ public class Jesus {
 	public String responseTitanGuessCommand(Command command) {
 		String targetUsername = "" ;
 		while ( targetUsername.equals("") ) {
-			System.out.print("[The Holy One]: Username of Player You Suspect or \"PASS\" if You Dont Suspect Anyone Tonight ? ") ;
+			System.out.print("[The Holy One]: " + "\u001B[33m" + "Username of Player You Suspect or \"PASS\" if You Dont Suspect Anyone Tonight ? " + "\u001B[0m") ;
 			targetUsername = scanner.nextLine() ;
 		}
 		return returnCommand("RESPONSE_TITAN_GUESS" , targetUsername) ;
@@ -148,7 +147,7 @@ public class Jesus {
 	public String responseMayorDecisionCommand(Command command) {
 		String decision = "" ;
 		while ( decision.equals("") ) {
-			System.out.print("[The Holy One]: Do You Wish to Cancel The Voting \"YES\" or \"NO\" (You Can Only Do This Once) ? ") ;
+			System.out.print("[The Holy One]: " + "\u001B[33m" + "Do You Wish to Cancel The Voting \"YES\" or \"NO\" (You Can Only Do This Once) ? " + "\u001B[0m") ;
 			decision = scanner.nextLine() ;
 		}
 		return returnCommand("RESPONSE_MAYOR_DECISION" , decision) ;
@@ -167,7 +166,7 @@ public class Jesus {
 	public String responseVoteCommand(Command command) {
 		String targetUsername = "" ;
 		while ( targetUsername.equals("") ) {
-			System.out.print("[The Holy One]: Who Do You Wish to Eject (\"PASS\" if You Do Not Wish to Vote) ? ") ;
+			System.out.print("[The Holy One]: " + "\u001B[31m" + "Who Do You Wish to Eject (\"PASS\" if You Do Not Wish to Vote) ? " + "\u001B[0m") ;
 			targetUsername = scanner.nextLine() ;
 		}
 		return returnCommand("RESPONSE_VOTE" , targetUsername) ;

@@ -77,7 +77,7 @@ public class God {
 		}
 
 		String msg = "Introduction Night Has Started !" ;
-		broadcastMessage(msg) ;
+		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 
 		String introductionMsgMafia = "The Mafias => " ;
 		for ( Socket mafia : data.mafias )
@@ -95,11 +95,11 @@ public class God {
 		}
 
 		msg = "Introduction Night Has Ended !" ;
-		broadcastMessage(msg) ;
+		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 	}
 	public void runFirstDay() {
 		String msg = "Introduction Day Has Started !" ;
-		broadcastMessage(msg) ;
+		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 		// Show All Players
 		msg = "Players Alive => " ;
 		for ( String username : data.usernames.keySet() )
@@ -118,7 +118,7 @@ public class God {
 			closePublicChatroom(client) ;
 		// Display Final Message of the Day
 		msg = "Introduction Day Has Ended !" ;
-		broadcastMessage(msg) ;
+		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 	}
 	public void runNight() {
 		String introductionMsgMafia = "Mafias => " ;
@@ -128,7 +128,7 @@ public class God {
 			sendMessage(mafia , introductionMsgMafia) ;
 
 		String msg = "Night " + data.dayCount + " Has Started" ;
-		broadcastMessage(msg) ;
+		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 		// Open Chat for Mafia
 		for ( Socket client : data.mafias )
 			openMafiaChatroom(client) ;
@@ -410,11 +410,11 @@ public class God {
 		}
 		// Display Final Message of the Night
 		msg = "Night " + data.dayCount + " Has Ended !" ;
-		broadcastMessage(msg) ;
+		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 	}
 	public void runDay() {
 		String msg = "Day " + data.dayCount + " Has Started !" ;
-		broadcastMessage(msg) ;
+		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 		// Show Alive Players 
 		msg = "Players Alive => " ;
 		for ( String username : data.usernames.keySet() ) {
@@ -442,11 +442,11 @@ public class God {
 		}
 		// Display Final Message of the Day
 		msg = "Day " + data.dayCount + " Has Ended !" ;
-		broadcastMessage(msg) ;
+		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 	}
 	public void runVoting() {
 		String msg = "Voting " + data.dayCount + " Has Started !" ;
-		broadcastMessage(msg) ;
+		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 		// Ask for Votes
 		data.votes.put("PASS" , 0) ;
 		for ( Socket client : data.clients.keySet() )
@@ -480,10 +480,10 @@ public class God {
 			exception.printStackTrace() ;
 		}
 
-		broadcastMessage("Voting Results : ") ;
+		broadcastMessage("\u001B[36m" + "Voting Results : " + "\u001B[0m") ;
 		for ( String username : data.usernames.keySet() ) {
 			msg = username + " Voted For => " + data.voteMap.get(username) ;
-			broadcastMessage(msg) ;
+			broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 		}
 		// Ask Mayor if he wants to cancel
 		String theMayor = "The Mayor" ;
@@ -504,7 +504,7 @@ public class God {
 			msg = data.clients.get(data.roleSocketMap.get(theMayor)) + " (The Mayor) Canceled The Voting !" ;
 			broadcastMessage(msg) ;
 			msg = "Nobody Was Ejected !" ;
-			broadcastMessage(msg) ;
+			broadcastMessage("\u001B[31m" + msg + "\u001B[0m") ;
 		} else {
 			// Find user with max votes
 			String maxVotesUsername = "PASS" ;
@@ -518,13 +518,13 @@ public class God {
 						secondMaxVotesUsername = username ;
 			if ( maxVotesUsername.equals("PASS") ) {
 				msg = "Nobody Was Ejected !" ;
-				broadcastMessage(msg) ;
+				broadcastMessage("\u001B[31m" + msg + "\u001B[0m") ;
 			} else if ( data.votes.get(maxVotesUsername) == data.votes.get(secondMaxVotesUsername) ) {
 				msg = "Nobody Was Ejected !" ;
-				broadcastMessage(msg) ;
+				broadcastMessage("\u001B[31m" + msg + "\u001B[0m") ;
 			} else {
 				msg = maxVotesUsername + " (" + data.socketRoleMap.get(data.usernames.get(maxVotesUsername)).getName() + ") Was Ejected !" ;
-				broadcastMessage(msg) ;
+				broadcastMessage("\u001B[31m" + msg + "\u001B[0m") ;
 				Socket ejectedUserSocket = data.usernames.get(maxVotesUsername) ;
 				data.usernames.remove(maxVotesUsername) ;
 				data.clients.remove(ejectedUserSocket) ;
@@ -533,7 +533,7 @@ public class God {
 		}
 
 		msg = "Voting " + data.dayCount + " Has Ended !" ;
-		broadcastMessage(msg) ;
+		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 	}
 	public void nextDay() {
 		if ( !(data.silenced == null || data.silenced.equals("NULL")) ) {
@@ -548,12 +548,12 @@ public class God {
 	}
 	public void mafiaWin() {
 		// TODO : Complete Method
-		broadcastMessage("Game Finished => The Mafias Won") ;
+		broadcastMessage("\u001B[36m" + "Game Finished => The Mafias Won" + "\u001B[0m") ;
 		System.out.println("Game Finished => The Mafias Won") ;
 	}
 	public void civilianWin() {
 		// TODO : Complete Method
-		broadcastMessage("Game Finished => The Civilians Won") ;
+		broadcastMessage("\u001B[36m" + "Game Finished => The Civilians Won" + "\u001B[0m") ;
 		System.out.println("Game Finished => The Civilians Won") ;
 	}
 	public boolean endgame() {
@@ -807,7 +807,7 @@ public class God {
 			if ( client != socket ) {
 				try {
 					PrintWriter writer = new PrintWriter(client.getOutputStream() , true) ;
-					writer.println(msg) ;
+					writer.println("\u001B[32m" + msg + "\u001B[0m") ;
 				} catch ( IOException exception ) {
 					exception.printStackTrace() ;
 				}
@@ -818,7 +818,7 @@ public class God {
 			if ( client != socket ) {
 				try {
 					PrintWriter writer = new PrintWriter(client.getOutputStream() , true) ;
-					writer.println(msg) ;
+					writer.println("\u001B[32m" + msg + "\u001B[0m") ;
 				} catch ( IOException exception ) {
 					exception.printStackTrace() ;
 				}
@@ -909,7 +909,7 @@ public class God {
 			data.mafias.remove(socket) ;
 		else
 			data.civilians.remove(socket) ;
-		sendMessage(socket , "YOU DIED !") ;
+		sendMessage(socket , "\u001B[31m" + "YOU DIED !" + "\u001B[0m") ;
 		sendCommand(socket , "REQUEST_DISCONNECT") ;
 	}
 	
