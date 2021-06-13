@@ -75,6 +75,8 @@ public class God {
 				data.civilians.add(data.roleSocketMap.get(roleName)) ;
 			}
 		}
+		for ( String Username : data.allUsernames.keySet() )
+			data.voteCounter.put(Username , 0) ;
 
 		String msg = "Introduction Night Has Started !" ;
 		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
@@ -464,6 +466,12 @@ public class God {
 					exception.printStackTrace() ;
 				}
 			}
+			if ( data.voteMap.get(username).equals("PASS") ) {
+				int prevValue = data.voteCounter.get(username) ;
+				data.voteCounter.put(username , prevValue + 1) ;
+			} else {
+				data.voteCounter.put(username , 0) ;
+			}
 			data.ready.add(username) ;
 		}
 		// Check if Everyone has Done their Job
@@ -532,6 +540,20 @@ public class God {
 			}
 		}
 
+		ArrayList<String> temp = new ArrayList<String>() ;
+		for ( String username : data.usernames.keySet() )
+			if ( data.usernames.get(username) != null && data.voteCounter.get(username) >= 3 ) {
+				msg = username + " (" + data.socketRoleMap.get(data.usernames.get(username)).getName() + ") Was Ejected For 3 Passes !" ;
+				broadcastMessage("\u001B[31m" + msg + "\u001B[0m") ;
+				temp.add(username) ;
+			}
+		for ( String username : temp ) {
+			Socket ejectedUserSocket = data.usernames.get(username) ;
+			data.usernames.remove(username) ;
+			data.clients.remove(ejectedUserSocket) ;
+			disconnect(ejectedUserSocket) ;
+		}
+
 		msg = "Voting " + data.dayCount + " Has Ended !" ;
 		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 	}
@@ -547,12 +569,10 @@ public class God {
 		data.dayCount ++ ;
 	}
 	public void mafiaWin() {
-		// TODO : Complete Method
 		broadcastMessage("\u001B[36m" + "Game Finished => The Mafias Won" + "\u001B[0m") ;
 		System.out.println("Game Finished => The Mafias Won") ;
 	}
 	public void civilianWin() {
-		// TODO : Complete Method
 		broadcastMessage("\u001B[36m" + "Game Finished => The Civilians Won" + "\u001B[0m") ;
 		System.out.println("Game Finished => The Civilians Won") ;
 	}

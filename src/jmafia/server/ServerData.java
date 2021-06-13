@@ -34,6 +34,7 @@ public class ServerData {
 	public HashMap<Socket , String> clients ;
 	public HashMap<String , Socket> usernames ;
 	public HashMap<String , Socket> allUsernames ;
+	public HashMap<String , Integer> voteCounter ;
 	// Volatile Fields
 	public String killed ;
 	public String sniped ;
@@ -50,8 +51,8 @@ public class ServerData {
 	private ServerData() {
 		dayCount = 0 ;
 		playerCount = 0 ;
-		mafiaChatTimer = /*(long)60000*/ (long)3000 ;
-		publicChatTimer = /*(long)300000*/ (long)3000 ;
+		mafiaChatTimer = /*(long)60000*/ (long)30000 ;
+		publicChatTimer = /*(long)300000*/ (long)30000 ;
 		mafiaChat = false ;
 		publicChat = false ;
 
@@ -70,6 +71,7 @@ public class ServerData {
 		clients = new HashMap<Socket , String>() ;
 		usernames = new HashMap<String , Socket>() ;
 		allUsernames = new HashMap<String , Socket>() ;
+		voteCounter = new HashMap<String , Integer>() ;
 
 		killed = "NULL" ;
 		sniped = "NULL" ;
