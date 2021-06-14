@@ -457,6 +457,7 @@ public class God {
 
 		for ( String username : data.usernames.keySet() ) {
 			askVote(data.usernames.get(username)) ;
+
 			while ( true ) {
 				if ( data.voteMap.containsKey(username) )
 					break ;
@@ -488,7 +489,7 @@ public class God {
 			exception.printStackTrace() ;
 		}
 
-		broadcastMessage("\u001B[36m" + "Voting Results : " + "\u001B[0m") ;
+		broadcastMessage("\u001B[36m" + "## Voting Results ##" + "\u001B[0m") ;
 		for ( String username : data.usernames.keySet() ) {
 			msg = username + " Voted For => " + data.voteMap.get(username) ;
 			broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
@@ -509,7 +510,7 @@ public class God {
 		}
 		if ( data.mayorDecision.equals("YES") ) {
 			data.mayorUsedAbility = true ;
-			msg = data.clients.get(data.roleSocketMap.get(theMayor)) + " (The Mayor) Canceled The Voting !" ;
+			msg = data.clients.get(data.roleSocketMap.get(theMayor)) + " Canceled The Voting !" ;
 			broadcastMessage(msg) ;
 			msg = "Nobody Was Ejected !" ;
 			broadcastMessage("\u001B[31m" + msg + "\u001B[0m") ;
@@ -531,7 +532,7 @@ public class God {
 				msg = "Nobody Was Ejected !" ;
 				broadcastMessage("\u001B[31m" + msg + "\u001B[0m") ;
 			} else {
-				msg = maxVotesUsername + " (" + data.socketRoleMap.get(data.usernames.get(maxVotesUsername)).getName() + ") Was Ejected !" ;
+				msg = maxVotesUsername + " Was Ejected !" ;
 				broadcastMessage("\u001B[31m" + msg + "\u001B[0m") ;
 				Socket ejectedUserSocket = data.usernames.get(maxVotesUsername) ;
 				data.usernames.remove(maxVotesUsername) ;
@@ -543,7 +544,7 @@ public class God {
 		ArrayList<String> temp = new ArrayList<String>() ;
 		for ( String username : data.usernames.keySet() )
 			if ( data.usernames.get(username) != null && data.voteCounter.get(username) >= 3 ) {
-				msg = username + " (" + data.socketRoleMap.get(data.usernames.get(username)).getName() + ") Was Ejected For 3 Passes !" ;
+				msg = username + " Was Ejected For 3 Passes !" ;
 				broadcastMessage("\u001B[31m" + msg + "\u001B[0m") ;
 				temp.add(username) ;
 			}
@@ -569,11 +570,11 @@ public class God {
 		data.dayCount ++ ;
 	}
 	public void mafiaWin() {
-		broadcastMessage("\u001B[36m" + "Game Finished => The Mafias Won" + "\u001B[0m") ;
+		broadcastMessage("\u001B[31m" + "Game Finished => The Mafias Won" + "\u001B[0m") ;
 		System.out.println("Game Finished => The Mafias Won") ;
 	}
 	public void civilianWin() {
-		broadcastMessage("\u001B[36m" + "Game Finished => The Civilians Won" + "\u001B[0m") ;
+		broadcastMessage("\u001B[31m" + "Game Finished => The Civilians Won" + "\u001B[0m") ;
 		System.out.println("Game Finished => The Civilians Won") ;
 	}
 	public boolean endgame() {
@@ -697,7 +698,6 @@ public class God {
 		}
 	}
 	// Role Methods
-	// TODO : Add Role Methods Here
 	public boolean isUserValid(String targetUsername) {
 		return !data.allUsernames.containsKey(targetUsername) ;
 	}
@@ -813,7 +813,6 @@ public class God {
 		}
 	}
 	// Commands
-	// TODO : Add Commands Here
 	public void sendWelcomeMessage(Socket socket) {
 		String msg = "Welcome " + data.clients.get(socket) + " !" ;
 		sendMessage(socket , msg) ;

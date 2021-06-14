@@ -52,19 +52,12 @@ public class Handler implements Runnable {
 					}
 				}
 			}
-// TODO		} catch ( SocketException exception ) {
-// TODO			exception.printStackTrace() ;
 		} catch ( IOException exception ) {
 			exception.printStackTrace() ;
 		} finally {
-// TODO			try {
-				god.data.usernames.remove(god.data.clients.get(socket)) ;
-				god.data.clients.remove(socket) ;
-				god.disconnect(socket) ;
-// TODO				socket.close() ;
-// TODO			} catch ( IOException exception ) {
-// TODO				exception.printStackTrace() ;
-// TODO			}
+			god.data.usernames.remove(god.data.clients.get(socket)) ;
+			god.data.clients.remove(socket) ;
+			god.disconnect(socket) ;
 		}
 	}
 	public boolean isCommandMsg(String msg) {

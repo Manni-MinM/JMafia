@@ -16,9 +16,8 @@ public class Server {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in) ;
 		// Ask Port
-		// TODO : Uncomment Below
-//		System.out.print("[PORT] : ") ;
-//		port = scanner.nextInt() ;
+		System.out.print("[PORT] : ") ;
+		port = scanner.nextInt() ;
 		// Ask Player Count
 		while ( playerCapacity > 10 || playerCapacity < 6 ) {
 			System.out.print("[PLAYER COUNT] : ") ;
