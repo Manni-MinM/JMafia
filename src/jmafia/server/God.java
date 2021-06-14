@@ -819,8 +819,8 @@ public class God {
 		sendMessage(socket , msg) ;
 	}
 	public void broadcastMessage(String msg) {
-		for ( Socket client : data.clients.keySet() )
-			sendMessage(client , msg) ;
+		for ( String username : data.allUsernames.keySet() )
+			sendMessage(data.allUsernames.get(username) , msg) ;
 	}
 	public void broadcastPublicMessage(Socket socket , String msg) {
 		for ( Socket client : data.clients.keySet() )

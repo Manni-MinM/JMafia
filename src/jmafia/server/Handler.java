@@ -34,12 +34,16 @@ public class Handler implements Runnable {
 			// Run Handler
 			while ( true ) {
 				clientResponse = reader.readLine() ;
-				if ( isCommandMsg(clientResponse) ) {
+				if ( clientResponse == null ) {
+					break ;
+				} else if ( isCommandMsg(clientResponse) ) {
 					god.process(socket , clientResponse) ;
 				} else {
 					if ( DEBUG )
 						System.out.println("RECV MSG : [USERNAME : " + god.data.clients.get(socket) + "] => " + clientResponse) ;
-					if ( god.data.publicChat ) {
+					if ( clientResponse.contains("!EXIT") ) {
+						break ;
+					} else if ( god.data.publicChat ) {
 						god.broadcastPublicMessage(socket , clientResponse) ;
 					} else if ( god.data.mafiaChat ) {
 						god.broadcastMafiaMessage(socket , clientResponse) ;
@@ -48,16 +52,19 @@ public class Handler implements Runnable {
 					}
 				}
 			}
-		} catch ( SocketException exception ) {
-			exception.printStackTrace() ;
+// TODO		} catch ( SocketException exception ) {
+// TODO			exception.printStackTrace() ;
 		} catch ( IOException exception ) {
 			exception.printStackTrace() ;
 		} finally {
-			try {
-				socket.close() ;
-			} catch ( IOException exception ) {
-				exception.printStackTrace() ;
-			}
+// TODO			try {
+				god.data.usernames.remove(god.data.clients.get(socket)) ;
+				god.data.clients.remove(socket) ;
+				god.disconnect(socket) ;
+// TODO				socket.close() ;
+// TODO			} catch ( IOException exception ) {
+// TODO				exception.printStackTrace() ;
+// TODO			}
 		}
 	}
 	public boolean isCommandMsg(String msg) {

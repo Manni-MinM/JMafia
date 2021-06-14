@@ -42,8 +42,8 @@ public class ReadThread implements Runnable {
 					System.out.println(msg) ;
 				}
 			}
-		} catch ( SocketException exception) {
-			exception.printStackTrace() ;
+		} catch ( SocketException exception ) {
+			// Do Nothing
 		} catch ( IOException exception ) {
 			exception.printStackTrace() ;
 		} finally {
