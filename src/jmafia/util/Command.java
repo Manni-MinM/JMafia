@@ -5,7 +5,10 @@ package jmafia.util ;
 import java.util.ArrayList ;
 
 /**
- * The type Command.
+ * The type Command
+ *
+ * @author Manni Moghimi
+ * @version v1.0
  */
 public class Command {
 	// Fields
@@ -13,25 +16,22 @@ public class Command {
 	private String username ;
 	private String function ;
 	private ArrayList<String> parameters ;
-
+	// Constructor
 	/**
 	 * Instantiates a new Command.
 	 */
-// Constructor
 	public Command() {
 		parameters = new ArrayList<String>() ;	
 	}
-
+	// Methods
 	/**
 	 * Gets username.
 	 *
 	 * @return the username
 	 */
-// Methods
 	public String getUsername() {
 		return username ;
 	}
-
 	/**
 	 * Gets function.
 	 *
@@ -40,7 +40,6 @@ public class Command {
 	public String getFunction() {
 		return function ;
 	}
-
 	/**
 	 * Gets parameters.
 	 *
@@ -49,7 +48,6 @@ public class Command {
 	public ArrayList<String> getParameters() {
 		return parameters ;
 	}
-
 	/**
 	 * Sets count.
 	 *
@@ -58,7 +56,6 @@ public class Command {
 	public void setCount(int count) {
 		this.count = count ;
 	}
-
 	/**
 	 * Sets username.
 	 *
@@ -67,7 +64,6 @@ public class Command {
 	public void setUsername(String username) {
 		this.username = username ;
 	}
-
 	/**
 	 * Sets function.
 	 *
@@ -76,7 +72,6 @@ public class Command {
 	public void setFunction(String function) {
 		this.function = function ;
 	}
-
 	/**
 	 * Add parameter.
 	 *
@@ -85,7 +80,6 @@ public class Command {
 	public void addParameter(String parameter) {
 		this.parameters.add(parameter) ;
 	}
-
 	/**
 	 * Parse.
 	 *
