@@ -8,6 +8,9 @@ import java.util.* ;
 
 import jmafia.roles.Role ;
 
+/**
+ * The type Server data.
+ */
 public class ServerData {
 	// Private Fields
 	private static ServerData data ;
@@ -86,11 +89,19 @@ public class ServerData {
 		voteMap = new HashMap<String , String>() ;
 	}
 	// Methods
+	/**
+	 * Gets instance.
+	 *
+	 * @return the instance
+	 */
 	public static ServerData getInstance() {
 		if ( data == null )
 			data = new ServerData() ;
 		return data ;
 	}
+	/**
+	 * Reset volatile.
+	 */
 	public void resetVolatile() {
 		killed = "NULL" ;
 		sniped = "NULL" ;

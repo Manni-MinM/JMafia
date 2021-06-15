@@ -11,6 +11,12 @@ import jmafia.roles.Role ;
 import jmafia.roles.mafia.* ;
 import jmafia.roles.civilian.* ;
 
+/**
+ * The God Class
+ *
+ * @author Manni Moghimi
+ * @version v1.0
+ */
 public class God {
 	// Fields
 	public ServerData data ;
@@ -18,20 +24,34 @@ public class God {
 	private String serverName ;
 	private static boolean DEBUG = true ;
 	// Constructor
+	/**
+	 * Instantiates a new God.
+	 */
 	public God() {
 		// Config
 		this.data = ServerData.getInstance() ;
 		this.serverName = "The Holy One" ;
 	}
 	// Methods
+	/**
+	 * Gets instance.
+	 *
+	 * @return the instance
+	 */
 	public static God getInstance() {
 		if ( god == null )
 			god = new God() ;
 		return god ;
 	}
+	/**
+	 * Init.
+	 */
 	public void init() {
 		initRoles() ;
 	}
+	/**
+	 * Init roles.
+	 */
 	public void initRoles() {
 		if ( data.playerCount >= 6 ) {
 			data.roles.add("The GodFather") ;
@@ -56,6 +76,9 @@ public class God {
 		for ( int it = 0 ; it < data.roles.size() ; it ++ )
 			Collections.shuffle(data.roles) ;
 	}
+	/**
+	 * Run first night.
+	 */
 	public void runFirstNight() {
 		// Greet User
 		for ( Socket client : data.clients.keySet() )
@@ -99,6 +122,9 @@ public class God {
 		msg = "Introduction Night Has Ended !" ;
 		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 	}
+	/**
+	 * Run first day.
+	 */
 	public void runFirstDay() {
 		String msg = "Introduction Day Has Started !" ;
 		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
@@ -122,6 +148,9 @@ public class God {
 		msg = "Introduction Day Has Ended !" ;
 		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 	}
+	/**
+	 * Run night.
+	 */
 	public void runNight() {
 		String introductionMsgMafia = "Mafias => " ;
 		for ( Socket mafia : data.mafias )
@@ -414,6 +443,9 @@ public class God {
 		msg = "Night " + data.dayCount + " Has Ended !" ;
 		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 	}
+	/**
+	 * Run day.
+	 */
 	public void runDay() {
 		String msg = "Day " + data.dayCount + " Has Started !" ;
 		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
@@ -446,6 +478,9 @@ public class God {
 		msg = "Day " + data.dayCount + " Has Ended !" ;
 		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 	}
+	/**
+	 * Run voting.
+	 */
 	public void runVoting() {
 		String msg = "Voting " + data.dayCount + " Has Started !" ;
 		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
@@ -558,6 +593,9 @@ public class God {
 		msg = "Voting " + data.dayCount + " Has Ended !" ;
 		broadcastMessage("\u001B[36m" + msg + "\u001B[0m") ;
 	}
+	/**
+	 * Next day.
+	 */
 	public void nextDay() {
 		if ( !(data.silenced == null || data.silenced.equals("NULL")) ) {
 			Socket silencedSocket = data.allUsernames.get(data.silenced) ;
@@ -569,14 +607,25 @@ public class God {
 		data.resetVolatile() ;
 		data.dayCount ++ ;
 	}
+	/**
+	 * Mafia win.
+	 */
 	public void mafiaWin() {
 		broadcastMessage("\u001B[31m" + "Game Finished => The Mafias Won" + "\u001B[0m") ;
 		System.out.println("Game Finished => The Mafias Won") ;
 	}
+	/**
+	 * Civilian win.
+	 */
 	public void civilianWin() {
 		broadcastMessage("\u001B[31m" + "Game Finished => The Civilians Won" + "\u001B[0m") ;
 		System.out.println("Game Finished => The Civilians Won") ;
 	}
+	/**
+	 * Endgame boolean.
+	 *
+	 * @return the boolean
+	 */
 	public boolean endgame() {
 		Socket godFatherSocket = data.roleSocketMap.get("The GodFather") ;
 		if ( !(data.clients.containsKey(godFatherSocket) && data.clients.get(godFatherSocket) != null) ) {
@@ -588,6 +637,13 @@ public class God {
 		}
 		return false ;
 	}
+	/**
+	 * Send command.
+	 *
+	 * @param socket     the socket
+	 * @param function   the function
+	 * @param parameters the parameters
+	 */
 	public void sendCommand(Socket socket , String function , String... parameters) {
 		Command serverCommand = new Command() ;
 		serverCommand.setUsername(serverName) ;
@@ -609,6 +665,12 @@ public class God {
 			exception.printStackTrace() ;
 		}
 	}
+	/**
+	 * Process.
+	 *
+	 * @param socket the socket
+	 * @param msg    the msg
+	 */
 	public void process(Socket socket , String msg) {
 		Command clientCommand = new Command() ;
 		clientCommand.parse(msg) ;
@@ -698,13 +760,31 @@ public class God {
 		}
 	}
 	// Role Methods
+	/**
+	 * Is user valid boolean.
+	 *
+	 * @param targetUsername the target username
+	 * @return the boolean
+	 */
 	public boolean isUserValid(String targetUsername) {
 		return !data.allUsernames.containsKey(targetUsername) ;
 	}
+	/**
+	 * Is alive boolean.
+	 *
+	 * @param roleName the role name
+	 * @return the boolean
+	 */
 	public boolean isAlive(String roleName) {
 		String targetUsername = data.clients.get(data.roleSocketMap.get(roleName)) ;
 		return data.usernames.containsKey(targetUsername) ;
 	}
+	/**
+	 * Is god father valid boolean.
+	 *
+	 * @param targetUsername the target username
+	 * @return the boolean
+	 */
 	public boolean isGodFatherValid(String targetUsername) {
 		if ( !data.usernames.containsKey(targetUsername) )
 			return false ;
@@ -716,6 +796,12 @@ public class God {
 			return false ;
 		}
 	}
+	/**
+	 * Is doctor lecter valid boolean.
+	 *
+	 * @param targetUsername the target username
+	 * @return the boolean
+	 */
 	public boolean isDoctorLecterValid(String targetUsername) {
 		if ( !data.usernames.containsKey(targetUsername) )
 			return false ;
@@ -735,6 +821,12 @@ public class God {
 				return false ;
 		}
 	}
+	/**
+	 * Is the doctor valid boolean.
+	 *
+	 * @param targetUsername the target username
+	 * @return the boolean
+	 */
 	public boolean isTheDoctorValid(String targetUsername) {
 		if ( !data.usernames.containsKey(targetUsername) )
 			return false ;
@@ -754,6 +846,12 @@ public class God {
 				return false ;
 		}
 	}
+	/**
+	 * Is detective valid boolean.
+	 *
+	 * @param targetUsername the target username
+	 * @return the boolean
+	 */
 	public boolean isDetectiveValid(String targetUsername) {
 		if ( !data.usernames.containsKey(targetUsername) )
 			return false ;
@@ -765,6 +863,12 @@ public class God {
 			return false ;
 		}
 	}
+	/**
+	 * Is sniper valid boolean.
+	 *
+	 * @param targetUsername the target username
+	 * @return the boolean
+	 */
 	public boolean isSniperValid(String targetUsername) {
 		if ( targetUsername.equals("PASS") )
 			return true ;
@@ -778,6 +882,12 @@ public class God {
 			return false ;
 		}
 	}
+	/**
+	 * Is psychologist valid boolean.
+	 *
+	 * @param targetUsername the target username
+	 * @return the boolean
+	 */
 	public boolean isPsychologistValid(String targetUsername) {
 		if ( targetUsername.equals("PASS") )
 			return true ;
@@ -791,6 +901,12 @@ public class God {
 			return false ;
 		}
 	}
+	/**
+	 * Is titan valid boolean.
+	 *
+	 * @param targetUsername the target username
+	 * @return the boolean
+	 */
 	public boolean isTitanValid(String targetUsername) {
 		if ( targetUsername.equals("PASS") )
 			return true ;
@@ -800,9 +916,21 @@ public class God {
 			return false ;
 		}
 	}
+	/**
+	 * Is mayor valid boolean.
+	 *
+	 * @param decision the decision
+	 * @return the boolean
+	 */
 	public boolean isMayorValid(String decision) {
 		return (decision.equals("YES") || decision.equals("NO")) ;
 	}
+	/**
+	 * Is vote valid boolean.
+	 *
+	 * @param targetUsername the target username
+	 * @return the boolean
+	 */
 	public boolean isVoteValid(String targetUsername) {
 		if ( targetUsername.equals("PASS") )
 			return true ;
@@ -812,15 +940,31 @@ public class God {
 			return true ;
 		}
 	}
+	/**
+	 * Send welcome message.
+	 *
+	 * @param socket the socket
+	 */
 	// Commands
 	public void sendWelcomeMessage(Socket socket) {
 		String msg = "Welcome " + data.clients.get(socket) + " !" ;
 		sendMessage(socket , msg) ;
 	}
+	/**
+	 * Broadcast message.
+	 *
+	 * @param msg the msg
+	 */
 	public void broadcastMessage(String msg) {
 		for ( String username : data.allUsernames.keySet() )
 			sendMessage(data.allUsernames.get(username) , msg) ;
 	}
+	/**
+	 * Broadcast public message.
+	 *
+	 * @param socket the socket
+	 * @param msg    the msg
+	 */
 	public void broadcastPublicMessage(Socket socket , String msg) {
 		for ( Socket client : data.clients.keySet() )
 			if ( client != socket ) {
@@ -832,6 +976,12 @@ public class God {
 				}
 			}
 	}
+	/**
+	 * Broadcast mafia message.
+	 *
+	 * @param socket the socket
+	 * @param msg    the msg
+	 */
 	public void broadcastMafiaMessage(Socket socket , String msg) {
 		for ( Socket client : data.mafias )
 			if ( client != socket ) {
@@ -843,12 +993,28 @@ public class God {
 				}
 			}
 	}
+	/**
+	 * Send message.
+	 *
+	 * @param socket the socket
+	 * @param msg    the msg
+	 */
 	public void sendMessage(Socket socket , String msg) {
 		sendCommand(socket , "SHOW_MESSAGE" , msg) ;
 	}
+	/**
+	 * Request username.
+	 *
+	 * @param socket the socket
+	 */
 	public void requestUsername(Socket socket) {
 		sendCommand(socket , "REQUEST_USERNAME") ;
 	}
+	/**
+	 * Send role.
+	 *
+	 * @param socket the socket
+	 */
 	public void sendRole(Socket socket) {
 		String roleName = data.roles.get(data.roles.size() - 1) ;
 		data.roles.remove(roleName) ;
@@ -879,49 +1045,119 @@ public class God {
 		data.alive.add(data.socketRoleMap.get(socket).getName()) ;
 		sendCommand(socket , "GET_ROLE" , roleName) ;
 	}
+	/**
+	 * Open public chatroom.
+	 *
+	 * @param socket the socket
+	 */
 	public void openPublicChatroom(Socket socket) {
 		data.publicChat = true ;
 		sendCommand(socket , "OPEN_PUBLIC_CHATROOM") ;
 	}
+	/**
+	 * Close public chatroom.
+	 *
+	 * @param socket the socket
+	 */
 	public void closePublicChatroom(Socket socket) {
 		data.publicChat = false ;
 		sendCommand(socket , "CLOSE_PUBLIC_CHATROOM") ;
 	}
+	/**
+	 * Open mafia chatroom.
+	 *
+	 * @param socket the socket
+	 */
 	public void openMafiaChatroom(Socket socket) {
 		data.mafiaChat = true ;
 		sendCommand(socket , "OPEN_MAFIA_CHATROOM") ;
 	}
+	/**
+	 * Close mafia chatroom.
+	 *
+	 * @param socket the socket
+	 */
 	public void closeMafiaChatroom(Socket socket) {
 		data.mafiaChat = false ;
 		sendCommand(socket , "CLOSE_MAFIA_CHATROOM") ;
 	}
+	/**
+	 * Ask god father.
+	 *
+	 * @param socket the socket
+	 */
 	public void askGodFather(Socket socket) {
 		sendCommand(socket , "REQUEST_KILL") ;
 	}
+	/**
+	 * Ask doctor lecter.
+	 *
+	 * @param socket the socket
+	 */
 	public void askDoctorLecter(Socket socket) {
 		sendCommand(socket , "REQUEST_MAFIA_HEAL") ;
 	}
+	/**
+	 * Ask the doctor.
+	 *
+	 * @param socket the socket
+	 */
 	public void askTheDoctor(Socket socket) {
 		sendCommand(socket , "REQUEST_CIVILIAN_HEAL") ;
 	}
+	/**
+	 * Ask detective.
+	 *
+	 * @param socket the socket
+	 */
 	public void askDetective(Socket socket) {
 		sendCommand(socket , "REQUEST_DETECTIVE_GUESS") ;
 	}
+	/**
+	 * Ask sniper.
+	 *
+	 * @param socket the socket
+	 */
 	public void askSniper(Socket socket) {
 		sendCommand(socket , "REQUEST_SNIPER_KILL") ;
 	}
+	/**
+	 * Ask psychologist.
+	 *
+	 * @param socket the socket
+	 */
 	public void askPsychologist(Socket socket) {
 		sendCommand(socket , "REQUEST_SILENCED") ;
 	}
+	/**
+	 * Ask titan.
+	 *
+	 * @param socket the socket
+	 */
 	public void askTitan(Socket socket) {
 		sendCommand(socket , "REQUEST_TITAN_GUESS") ;
 	}
+	/**
+	 * Ask mayor.
+	 *
+	 * @param socket the socket
+	 */
 	public void askMayor(Socket socket) {
 		sendCommand(socket , "REQUEST_MAYOR_DECISION") ;
 	}
+	/**
+	 * Ask vote.
+	 *
+	 * @param socket the socket
+	 */
 	public void askVote(Socket socket) {
 		sendCommand(socket , "REQUEST_VOTE") ;
 	}
+	/**
+	 * Disconnect.
+	 *
+	 * @param socket the socket
+	 */
 	public void disconnect(Socket socket) {
 		data.alive.remove(data.socketRoleMap.get(socket).getName()) ;
 		if ( data.mafias.contains(socket) )
@@ -931,6 +1167,5 @@ public class God {
 		sendMessage(socket , "\u001B[31m" + "YOU DIED !" + "\u001B[0m") ;
 		sendCommand(socket , "REQUEST_DISCONNECT") ;
 	}
-	
 }
 

@@ -6,6 +6,12 @@ import jmafia.roles.Role ;
 import jmafia.roles.mafia.* ;
 import jmafia.roles.civilian.* ;
 
+/**
+ * A Class to Contain Client Data
+ *
+ * @author Manni Moghimi
+ * @version v1.0
+ */
 public class ClientData {
 	// Fields
 	public String NULL_RESPONSE ;
@@ -13,20 +19,43 @@ public class ClientData {
 	private boolean chatIsOpen ;
 	private String username ;
 	// Constructor
+	/**
+	 * Instantiates a new Client data.
+	 */
 	public ClientData() {
 		chatIsOpen = false ;
 		NULL_RESPONSE = "NULL_RESPONSE" ;
 	}
 	// Methods
+	/**
+	 * Gets username.
+	 *
+	 * @return the username
+	 */
 	public String getUsername() {
 		return username ;
 	}
+	/**
+	 * Sets username.
+	 *
+	 * @param username the username
+	 */
 	public void setUsername(String username) {
 		this.username = username ;
 	}
+	/**
+	 * Gets role.
+	 *
+	 * @return the role
+	 */
 	public Role getRole() {
 		return role ;
 	}
+	/**
+	 * Sets role.
+	 *
+	 * @param roleName the role name
+	 */
 	public void setRole(String roleName) {
 		if ( roleName.equals("Doctor Lecter") ) {
 			this.role = new DoctorLecter() ;
@@ -52,9 +81,17 @@ public class ClientData {
 			this.role = null ;
 		}
 	}
+	/**
+	 * Change chat state.
+	 */
 	public void changeChatState() {
 		chatIsOpen = !chatIsOpen ;
 	}
+	/**
+	 * Chat is open boolean.
+	 *
+	 * @return the boolean
+	 */
 	public boolean chatIsOpen() {
 		return chatIsOpen ;
 	}

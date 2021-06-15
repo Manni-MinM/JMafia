@@ -7,6 +7,12 @@ import java.net.* ;
 import java.util.* ;
 import java.util.concurrent.* ;
 
+/**
+ * The Read Thread Class
+ *
+ * @author Manni Moghimi
+ * @version v1.0
+ */
 public class ReadThread implements Runnable {
 	// Fields
 	private Jesus jesus ;
@@ -14,6 +20,13 @@ public class ReadThread implements Runnable {
 	private BufferedReader reader ;
 	private static boolean DEBUG = false ;
 	// Constructor
+	/**
+	 * Instantiates a new Read thread.
+	 *
+	 * @param in    the in
+	 * @param queue the queue
+	 * @param jesus the jesus
+	 */
 	public ReadThread(InputStream in , SynchronousQueue<String> queue , Jesus jesus) {
 		this.queue = queue ;
 		this.jesus = jesus ;
@@ -54,6 +67,12 @@ public class ReadThread implements Runnable {
 			}
 		}
 	}
+	/**
+	 * Is command msg boolean.
+	 *
+	 * @param msg the msg
+	 * @return the boolean
+	 */
 	public boolean isCommandMsg(String msg) {
 		return (msg.charAt(0) == '$') ;
 	}

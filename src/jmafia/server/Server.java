@@ -6,6 +6,12 @@ import java.io.* ;
 import java.net.* ;
 import java.util.* ;
 
+/**
+ * The Server Class
+ *
+ * @author Manni Moghimi
+ * @version v1.0
+ */
 public class Server {
 	// Fields
 	private static int port = 6969 ;
@@ -13,6 +19,11 @@ public class Server {
 	private static int playerCapacity ;
 	private static God god = God.getInstance() ;
 	// Methods
+	/**
+	 * The entry point of application.
+	 *
+	 * @param args the input arguments
+	 */
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in) ;
 		// Ask Port
@@ -59,7 +70,7 @@ public class Server {
 				god.runVoting() ;
 				god.nextDay() ;
 			}
-			
+
 		} catch ( IOException exception ) {
 			exception.printStackTrace() ;
 		}

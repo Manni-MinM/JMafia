@@ -8,11 +8,22 @@ import java.util.* ;
 
 import jmafia.util.* ;
 
+/**
+ * The Handler Class
+ *
+ * @author Manni Moghimi
+ * @version v1.0
+ */
 public class Handler implements Runnable {
 	// Fields
 	private Socket socket ;
 	private static God god = God.getInstance() ;
 	private static boolean DEBUG = true ;
+	/**
+	 * Instantiates a new Handler.
+	 *
+	 * @param socket the socket
+	 */
 	// Constructor
 	public Handler(Socket socket) {
 		this.socket = socket ;
@@ -60,8 +71,14 @@ public class Handler implements Runnable {
 			god.disconnect(socket) ;
 		}
 	}
+	/**
+	 * Is command msg boolean.
+	 *
+	 * @param msg the msg
+	 * @return the boolean
+	 */
 	public boolean isCommandMsg(String msg) {
 		return (msg.charAt(0) == '$') ;
-        }
+	}
 }
 

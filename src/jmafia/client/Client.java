@@ -7,14 +7,24 @@ import java.net.* ;
 import java.util.* ;
 import java.util.concurrent.* ;
 
+/**
+ * The Client Class
+ *
+ * @author Manni Moghimi
+ * @version v1.0
+ */
 public class Client {
 	// Fields
 	private static int port = 6969 ;
 	// Methods
+	/**
+	 * The entry point of application.
+	 *
+	 * @param args the input arguments
+	 */
 	public static void main(String[] args) {
 		// Ask Port
 		Scanner scanner = new Scanner(System.in) ;
-		// TODO : Uncomment Below
 		System.out.print("Port ? ") ;
 		port = scanner.nextInt() ;
 		// Run the Client
